@@ -1,0 +1,21 @@
+#	NOTE:	Need to execute 'systemctl enable kwbball' to get
+#		service to auto start on reboot.
+
+[Unit]
+Description=kwbball
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/projects/kwbball/bin/www
+Restart=always
+#User=nobody
+#Group=nogroup
+Environment=PATH=/usr/bin:/usr/local/bin
+#Environment=NODE_ENV=production
+#Environment=NODE_ENV=development
+WorkingDirectory=/projects/kwbball
+
+[Install]
+WantedBy=multi-user.target
+Alias=kwbball.service

@@ -1,0 +1,255 @@
+block content
+	div.settingsmenu(id='divSettingsMenu')
+		div.settingsmenuuser
+			i.settingsmenuusericon(class="bi bi-person")
+			label(id='divSettingsUserId') Keaton Weaver
+		div.settingsmenutitlelabel
+			label ACCOUNT
+		div.settingsmenucmd(id='cmdSettingsProfile')
+			label.settingsmenulabel(id='cmdSettingsProfile') Profile
+			i.settingsmenuicon(class="bi bi-chevron-right" id='cmdSettingsProfile')
+		div.settingsmenutitlelabel
+			label APP SETTINGS
+		div.settingsmenucmd(id='cmdSettingsPlayers')
+			label.settingsmenulabel(id='cmdSettingsPlayers') Players
+			i.settingsmenuicon(class="bi bi-chevron-right" id='cmdSettingsPlayers')
+		div.settingsmenucmd(id='cmdSettingsCoaches')
+			label.settingsmenulabel(id='cmdSettingsCoaches') Coaches
+			i.settingsmenuicon(class="bi bi-chevron-right" id='cmdSettingsCoaches')
+		div.settingsmenucmd(id='cmdSettingsLists')
+			label.settingsmenulabel(id='cmdSettingsLists') Lists
+			i.settingsmenuicon(class="bi bi-chevron-right" id='cmdSettingsLists')
+		div.settingsmenucmd(id='cmdSettingsSystem')
+			label.settingsmenulabel(id='cmdSettingsSystem') System
+			i.settingsmenuicon(class="bi bi-chevron-right" id='cmdSettingsSystem')
+	div(id='divSettingsLists')
+		div.listtype(id='divListTypeId')
+			div.listtypedown(id='divListTypeDownId')
+			div.listtypeselect(id='divListTypeSelectId')
+			div.listtypeup(id='divListTypeUpId')
+		div.row
+			div.col-12
+				table.data(id="tblNameList",
+					class="display nowrap table-striped table-bordered table-sm")
+					thead
+					tbody
+	div(id='divSettingsCoaches')
+		div.row.mt-2
+			label.settingstablelabel Coaches
+		div.row
+			div.col-12
+				table.data(id="tblCoachesList",
+					class="display nowrap table-striped table-bordered table-sm")
+					thead
+					tbody
+	div(id='divSettingsPlayers')
+		div.row.mt-2
+			label.settingstablelabel Players
+		div.row.mt-2
+			label.settingstablelabel Find By:
+		div.playertype(id='divPlayerTypeId')
+			div.playertypedown(id='divPlayerTypeDownId')
+			div.playertypeselect(id='divPlayerTypeSelectId')
+			div.playertypeup(id='divPlayerTypeUpId')
+		div.playertype(id='divPlayerSearchId')
+			div.playersearchfield(class="form-group form-floating")
+				input(class='form-control',type="text", onclick="this.select()" 
+					id='inputPlayerPropertyListId', 
+					list='datalistPlayerPropertyListId', placeholder="")
+				datalist(id='datalistPlayerPropertyListId')
+			div.playerfind(id='divPlayerFindId')
+		div.row
+			div.col-12
+				table.data(id="tblPlayersList",
+					class="display nowrap table-striped table-bordered table-sm")
+					thead
+					tbody
+	div(id="divSettingsSystem")
+		div.row.mt-2
+			div.col-md-2
+				div(class="form-group form-floating")
+					input(class="form-control",type="number" id="f_system_client_refreshrate", placeholder="rate" min="10" max="300" value="20")
+					label(for="f_system_client_refreshrate") Client Refresh Rate
+			div.col-md-10
+				div.btn-group.text-end
+					button.aGPT(id="btnSystemDefaults", title='save') RESET DEFAULTS
+					button.aGPT(id="btnSystemCleanup", title='save') SYSTEM CLEANUP
+		div.row.mt-2
+			hr
+		div.row.mt-2.mb-2
+			div.col-md-12.text-start
+				b Background
+		div.row
+			div.col-md-5
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled id="f_system_original_backgroundimage", placeholder="")
+					label(for="f_system_original_backgroundimage") Image
+			div.col-md-5
+				div(class="form-group form-floating")
+					div(class="custom-file")
+						label(id="",class="form-label" for="f_system_background_image_select")
+						input.fieldfullwidth(class='custom-file-input',type="file", id="f_system_background_image_select")
+			div.col-md-2
+				div.btn-group
+					button.aGPT(id="btnSystemBackgroundImageUpload", title='upload') UPLOAD
+		div.row
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="range", min='0' max='100' 
+						id="f_system_opacity_backgroundimage", placeholder=""
+						oninput="opacity_backgroundimage_value.value = this.value")
+					label(for="f_system_opacity_backgroundimage") Opacity
+			div.col-md-2
+				div(class="form-group form-floating")
+					input.text-center(id="opacity_backgroundimage_value" class='form-control' readonly)
+					label(for="opacity_backgroundimage_value") Opacity
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="color", id="f_system_color_backgroundimage", placeholder="")
+					label(for="f_system_color_backgroundimage") Color
+		div.row.mt-2
+			hr.menuhline
+		div.row.mt-2.mb-2
+			div.col-md-12.text-start
+				b Bullpen
+		div.row
+			div.col-md-5
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled id="f_system_original_bullpenimage", placeholder="")
+					label(for="f_system_original_bullpenimage") Image
+			div.col-md-5
+				div(class="form-group form-floating")
+					div(class="custom-file")
+						label(id="",class="form-label" for="f_system_bullpen_image_select")
+						input.fieldfullwidth(class='custom-file-input',type="file", id="f_system_bullpen_image_select")
+			div.col-md-2
+				div.btn-group
+					button.aGPT(id="btnSystemBullpenImageUpload", title='upload') UPLOAD
+		div.row
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="range", min='0' max='100' 
+						id="f_system_opacity_bullpenimage", placeholder=""
+						oninput="opacity_bullpenimage_value.value = this.value")
+					label(for="f_system_opacity_bullpenimage") Opacity
+			div.col-md-2
+				div(class="form-group form-floating")
+					input.text-center(id="opacity_bullpenimage_value" class='form-control' readonly)
+					label(for="opacity_bullpenimage_value") Opacity
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="color", id="f_system_color_bullpenimage", placeholder="")
+					label(for="f_system_color_bullpenimage") Color
+		div.row.mt-2
+			hr.menuhline
+		div.row.mt-2.mb-2
+			div.col-md-12.text-start
+				b Scrimmage
+		div.row
+			div.col-md-5
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled id="f_system_original_scrimmageimage", placeholder="")
+					label(for="f_system_original_scrimmageimage") Image
+			div.col-md-5
+				div(class="form-group form-floating")
+					div(class="custom-file")
+						label(id="",class="form-label" for="f_system_scrimmage_image_select")
+						input.fieldfullwidth(class='custom-file-input',type="file", 
+							id="f_system_scrimmage_image_select")
+			div.col-md-2
+				div.btn-group
+					button.aGPT(id="btnSystemScrimmageImageUpload", title='upload') UPLOAD
+		div.row
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="range", min='0' max='100' 
+						id="f_system_opacity_scrimmageimage", placeholder=""
+						oninput="opacity_scrimmageimage_value.value = this.value")
+					label(for="f_system_opacity_scrimmageimage") Opacity
+			div.col-md-2
+				div(class="form-group form-floating")
+					input.text-center(id="opacity_scrimmageimage_value" class='form-control' readonly)
+					label(for="opacity_scrimmageimage_value") Opacity
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="color", id="f_system_color_scrimmageimage", placeholder="")
+					label(for="f_system_color_scrimmageimage") Color
+		div.row.mt-2
+			hr.menuhline
+		div.row.mt-2.mb-2
+			div.col-md-12.text-start
+				b Game
+		div.row
+			div.col-md-5
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled id="f_system_original_gameimage", placeholder="")
+					label(for="f_system_original_gameimage") Image
+			div.col-md-5
+				div(class="form-group form-floating")
+					div(class="custom-file")
+						label(id="",class="form-label" for="f_system_game_image_select")
+						input.fieldfullwidth(class='custom-file-input',type="file", id="f_system_game_image_select")
+			div.col-md-2
+				div.btn-group
+					button.aGPT(id="btnSystemGameImageUpload", title='upload') UPLOAD
+		div.row
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="range", min='0' max='100' 
+						id="f_system_opacity_gameimage", placeholder=""
+						oninput="opacity_gameimage_value.value = this.value")
+					label(for="f_system_opacity_gameimage") Opacity
+			div.col-md-2
+				div(class="form-group form-floating")
+					input.text-center(id="opacity_gameimage_value" class='form-control' readonly)
+					label(for="opacity_gameimage_value") Opacity
+			div.col-md-3
+				div(class="form-group form-floating")
+					input(class='form-control',type="color", id="f_system_color_gameimage", placeholder="")
+					label(for="f_system_color_gameimage") Color
+		div.row.mt-2
+			hr.menuhline
+		div.row
+			div.col-6.text-start
+				b Internal Use
+		div.row
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_system_name", placeholder="")
+					label(for="f_system_name") Name
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_system_date_created", placeholder="")
+					label(for="f_system_date_created") Date Added
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_system_date_lastmodified", placeholder="")
+					label(for="f_system_date_lastmodified") Last Modified
+
+	div(id="divSettingsSystem1")
+		div.row
+			div.col-6
+				div(class="form-group form-floating")
+					input.inputGPT-lg(class="form-control",type="number" id="f_systemsettings_client_refreshrate", placeholder="rate" min="10" max="300" value="20")
+					label(for="f_systemsettings_client_refreshrate") Client UI Refresh Rate
+			div.offset-3.col-3
+				div.btn-group.btnGrp
+					button.aGPT(id="btnSystemCleanup", title='save') SYSTEM CLEANUP
+		div.row.mt-2
+			hr.menuhline
+		div.row
+			div.col-6
+				b Internal Use
+		div.row
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_systemsettings_name", placeholder="")
+					label(for="f_systemsettings_name") Name
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_systemsettings_date_created", placeholder="")
+					label(for="f_systemsettings_date_created") Date Added
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_systemsettings_date_lastmodified", placeholder="")
+					label(for="f_systemsettings_date_lastmodified") Last Modified

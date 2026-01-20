@@ -1,0 +1,88 @@
+block content
+	div(id="divUserProperties")
+		div.row.mt-2
+			div.col-md-6
+				div(class="form-group form-floating")
+					input(class='form-control text-capitalize' type="text" id="f_user_fname", placeholder="first name")
+					label.labelRequired(for="f_user_fname") First Name
+			div.col-md-6
+				div(class="form-group form-floating")
+					input(class='form-control text-capitalize' type="text" id="f_user_lname", placeholder="last name")
+					label.labelRequired(for="f_user_lname") Last Name
+		div(id='divPlayerProperties')
+			div.row
+				div.col-md-6
+					div(class="form-group form-floating")
+						select(class='form-select',id="f_user_classyear" placeholder="")
+						label(class="form-label" for="f_user_classyear") Class Year
+				div.col-md-6
+					div(class="form-group form-floating")
+						select(class='form-select',id="f_user_team" placeholder="")
+						label(class="form-label" for="f_user_team") Team
+			div.row.mt-4(id='divPlayerThrow')
+				div.col-3.text-start
+					b Throw
+				div.col-9.text-start
+					div.form-check.form-check-inline
+						input.form-check-input(type='radio',name='playerthrow',id='throwLeftOptionId',value=0)
+						label.form-check-label(for='throwLeftOptionId') Left
+					div.form-check.form-check-inline
+						input.form-check-input(type='radio',name='playerthrow',id='throwRightOptionId',value=0)
+						label.form-check-label(for='throwRightOptionId') Right
+			div.row.mt-4(id='divPlayerBat')
+				div.col-3.text-start
+					b Bat
+				div.col-9.text-start
+					div.form-check.form-check-inline
+						input.form-check-input(type='radio',name='playerbat',id='batLeftOptionId',value=0)
+						label.form-check-label(for='batLeftOptionId') Left
+					div.form-check.form-check-inline
+						input.form-check-input(type='radio',name='playerbat',id='batRightOptionId',value=0)
+						label.form-check-label(for='batRightOptionId') Right
+					div.form-check.form-check-inline
+						input.form-check-input(type='radio',name='playerbat',id='batSwitchOptionId',value=0)
+						label.form-check-label(for='batSwitchOptionId') Switch
+			div.row.mt-2(id='divPlayerPitches')
+				div.col-md-6
+					table.data(id="tblPitchType",
+						class="display nowrap table-striped table-bordered table-sm")
+						thead
+						tbody
+		div.row.mt-3
+			hr.menuhline
+		div.row
+			div.col-6.text-start
+				b Internal Use
+		div.row
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_user_id", placeholder="")
+					label(for="f_user_id") Id
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_user_date_created", placeholder="")
+					label(for="f_user_date_created") Date Added
+			div.col-4
+				div(class="form-group form-floating")
+					input(class='form-control',type="text", disabled, id="f_user_date_lastmodified", placeholder="")
+					label(for="f_user_date_lastmodified") Last Modified
+		div.hide
+			input(class='form-control',type="text", disabled, id="f_user_type", placeholder="")
+	div(id="divUserLogin")
+		div.row
+			div.col-12.text-end
+				div.settingsmenuuser(id='btnLoginClose')
+					i.settingsmenuusericon(class="bi bi-x")
+		div.row.mt-4
+			div.col-8.offset-2
+				div(class="form-group form-floating")
+					input.logincntl(class='form-control',type="text", id="f_user_login_fname", placeholder="FIRST")
+					label.logincntl.labelRequired(for="f_user_login_fname") First Name
+		div.row.mt-4
+			div.col-8.offset-2
+				div(class="form-group form-floating")
+					input.logincntl(class='form-control',type="text", id="f_user_login_lname", placeholder="LAST")
+					label.logincntl.labelRequired(for="f_user_login_lname") Last Name
+		div.row.mt-4.mb-5
+			div.col-4.offset-4
+				button.aGPT(id="btnUserLoginSubmit", title='submit') SUBMIT

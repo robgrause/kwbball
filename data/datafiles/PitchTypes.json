@@ -1,0 +1,24 @@
+{
+"types" :[
+			{
+			"f_name" : "4 Seam",
+			"f_date_created" : null
+			},
+			{
+			"f_name" : "2 Seam",
+			"f_date_created" : null
+			},
+			{
+			"f_name" : "Changeup",
+			"f_date_created" : null
+			},
+			{
+			"f_name" : "Slider",
+			"f_date_created" : null
+			},
+			{
+			"f_name" : "Curve",
+			"f_date_created" : null
+			}
+		]
+}

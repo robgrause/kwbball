@@ -1,0 +1,41 @@
+block content	
+	div.modal(id="modalDialog")
+		div.modal-content
+			div.row.modal-header
+				div.col-12
+					b(id="modalHeader")
+			div.row.modal-body
+				div.col-12
+					b(id="modalMsg1")
+					b(id="modalMsg2")
+			div.row.modal-footer.mt-3
+				div.col-12
+					b(id="modalFooter")
+				div.row(id='modalOkCancelMode')
+					div.col-12
+						div.btn-group.btnGrp.text-end
+							button.aGPTMedium.aGPTModal(id="btn_modal_ok") OK
+							button.aGPTMedium.aGPTModal(id="btn_modal_cancel") CANCEL
+				div.row(id='modalYesNoMode')
+					div.col-12
+						div.btn-group.btnGrp.text-end
+							button.aGPTMedium.aGPTModal(id="btn_modal_yes") YES
+							button.aGPTMedium.aGPTModal.ms-4(id="btn_modal_no") NO
+
+	div.showdisplaymsg.hide(id="showDisplayMsgDialog")
+		div.dialogcontrols
+			div.row.mb-4
+				div.col-12
+					button.aGPTShowMsg(id='cmdShowDisplayMsgContinue') CONTINUE
+			div.row
+				div.col-12
+					p.labeldisplaymsg(id='pShowDisplayMsgDialog')
+
+	div.reloadapp.hide(id="reloadAppDialog")
+		div.mt-4.dialogcontrols
+			div.row.mt-2
+				div.col-12.text-center
+					b Software updates have been downloaded and installed.
+			div.row.mt-4
+				div.col-12.text-center
+					b Reload in progress...

@@ -1,0 +1,44 @@
+{
+"users" :[
+			{
+			"f_lname" : "Grause",
+			"f_fname" : "Rob",
+			"f_typeid" : 100,
+			"f_date_created" : null
+			},
+			{
+			"f_lname" : "Weaver",
+			"f_fname" : "Keaton",
+			"f_typeid" : 70,
+			"f_date_created" : null
+			},
+			{
+			"f_lname" : "test1",
+			"f_fname" : "test",
+			"f_classyear":2024,
+			"f_typeid" : 20,
+			"f_date_created" : null
+			},
+			{
+			"f_lname" : "test2",
+			"f_fname" : "test",
+			"f_classyear":2025,
+			"f_typeid" : 20,
+			"f_date_created" : null
+			},
+			{
+			"f_lname" : "test3",
+			"f_fname" : "test",
+			"f_classyear":2026,
+			"f_typeid" : 20,
+			"f_date_created" : null
+			},
+				{
+			"f_lname" : "test4",
+			"f_fname" : "test",
+			"f_classyear":2027,
+			"f_typeid" : 20,
+			"f_date_created" : null
+			}
+		]
+}

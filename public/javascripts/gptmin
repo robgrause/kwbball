@@ -1,0 +1,23 @@
+#!/bin/bash
+#process on command line by typing ./gptmin
+
+echo "Making KWBBall.min.js..."
+terser 	../../includes/gptVersion.js ../../includes/gptDefines.js ../../includes/gptUtils.js \
+		../../includes/gptDateTime.js ../../includes/gptTables.js  ../../includes/gptMath.js \
+		../../includes/gptIndexDB.js ../../includes/gptSVG.js \
+		gptComm.js gptModal.js gptUser.js gptLists.js gptMain.js gptSession.js gptStats.js \
+		gptSystem.js gptPrint.js \
+		gptKWBBall.js \
+		--compress --mangle --output KWBBall.min.js
+echo "Making swKWBBall.min.js..."
+terser 	../../includes/gptVersion.js ../../includes/gptDefines.js ../../includes/gptIndexDB.js \
+		gptComm.js \
+		../../data/pwa/swKWBBall.js \
+		--compress --mangle --output ../../data/pwa/swKWBBall.min.js
+
+echo "Making Modal.min.css..."
+uglifycss ../stylesheets/styleModal.css --output ../stylesheets/Modal.min.css
+echo "Making KWBBall.min.css..."
+uglifycss ../stylesheets/styleKWBBall.css --output ../stylesheets/KWBBall.min.css
+
+

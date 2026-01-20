@@ -1,0 +1,16 @@
+{
+"users" :[
+			{
+			"f_lname" : "grause",
+			"f_fname" : "rob",
+			"f_typeid" : 100,
+			"f_date_created" : null
+			},
+			{
+			"f_lname" : "weaver",
+			"f_fname" : "keaton",
+			"f_typeid" : 70,
+			"f_date_created" : null
+			}		
+		]
+}

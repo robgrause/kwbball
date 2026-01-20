@@ -1,0 +1,7 @@
+node_modules
+companies
+env.js
+www
+*.min.*
+*.tar.gz
+*.map

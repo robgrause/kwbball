@@ -1,0 +1,19 @@
+block content
+	div(id='divStats')
+		div.row.mt-2
+			div.col-6.text-start
+				label STATS
+		div.row.mt-1
+			div.col-md-6
+				div.statsearch(id='divStatSearchId')
+					div.statsearchdown(id='divStatSearchDownId')
+					div.statsearchselect(id='divStatSearchSelectId')
+					div.statsearchup(id='divStatSearchUpId')
+			div.col-sm-4
+				div(class="form-group form-floating")
+					input(class='form-control text-capitalize',type="text", onclick="this.select()" id="f_statsearch_value", list = "list_StatSearch_Value", placeholder="value")
+					label.labelText(class='form-label' for="f_statsearch_value") Value
+					datalist(id="list_StatSearch_Value")
+			div.col-sm-2
+				div.statsearchfind(id='divStatSearchFindId')
+		div.row.mt-2

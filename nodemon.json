@@ -1,0 +1,8 @@
+{
+	"ignore": 
+		[
+		"data/themes",
+		"data/msgfiles",
+		"data/images"
+		]
+}

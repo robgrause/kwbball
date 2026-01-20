@@ -1,0 +1,84 @@
+extends layoutKWBBall
+block content
+	div.container-fluid.kwbball(id='KWBBall')
+		div(id="modalSpinnerParent")
+		div(id="idModal")
+			include gptModal.pug
+		div.maintopmenu.fixed-top(id="idMainTopMenu")
+			div.row.topcntls
+				div.topcntlssection1row1
+					div.cmdmenuback.hide(id='cmdMainBack')
+						a.cmdmenuback(id='cmdMainBack')
+							i(id='cmdMainBack' style="font-size:2.0rem" 
+								class='bi bi-arrow-left' data-toggle="tooltip" data-placement="top"
+								title="Back")
+				div.topcntlssection2row1
+					b.labelProduct KW Pitch Tracking
+				div.topcntlssection3row1
+					b.labelMainVersion(id='idVersion')
+			div.row.topcntls
+				div.topcntlssection1row2
+					b.hide.labelMainStatus(id="idlabelMainStatus")
+				div.topcntlssection2row2
+					div.hide(id='cmdMainInstall')
+						a(id='cmdMainInstall')
+							i.cmdmainicon(id='cmdMainInstall'
+								class='bi bi-download' data-toggle="tooltip" data-placement="top"
+								title="Install as an app on device")
+							b.cmdmainlabel(for='cmdMainInstall') INSTALL
+		div.maincontent.hide(id='idMainCmdContent')
+			div.cmdmainmenu(id='idMainCommands')
+				div.cmdmenusearch.hide(id='cmdMainSearch')
+					a(id='cmdMainSearch')
+						i.cmdmainicon(id='cmdMainSearch'
+							class='bi bi-search' data-toggle="tooltip" data-placement="top"
+							title="Search")
+						b.cmdmainlabel(for='cmdMainSearch') SEARCH
+				div.cmdmenunew.hide(id='cmdMainNew')
+					a(id='cmdMainNew')
+						i.cmdmainicon(id='cmdMainNew'
+							class='bi bi-plus-square' data-toggle="tooltip" data-placement="top"
+							title="New")
+						b.cmdmainlabel(for='cmdMainNew') NEW
+				div.cmdmenuedit.hide(id='cmdMainEdit')
+					a(id='cmdMainEdit')
+						i.cmdmainicon(id='cmdMainEdit'
+							class='bi bi-pencil-square' data-toggle="tooltip" data-placement="top"
+							title="Edit")
+						b.cmdmainlabel(for='cmdMainEdit') EDIT
+				div.cmdmenusave.hide(id='cmdMainSave')
+					a(id='cmdMainSave')
+						i.cmdmainicon(id='cmdMainSave'
+							class='bi bi-save' data-toggle="tooltip" data-placement="top"
+							title="Save")
+						b.cmdmainlabel(for='cmdMainSave') SAVE
+				div.cmdmenudelete.hide(id='cmdMainDelete')
+					a(id='cmdMainDelete')
+						i.cmdmainicon(id='cmdMainDelete'
+							class='bi bi-trash' data-toggle="tooltip" data-placement="top"
+							title="Delete")
+						b.cmdmainlabel(for='cmdMainDelete') DELETE
+				div.cmdmenusubmit.hide(id='cmdMainSubmit')
+					a(id='cmdMainSubmit')
+						i.cmdmainicon(id='cmdMainSubmit'
+							class='bi bi-send' data-toggle="tooltip" data-placement="top"
+							title="Submit")
+						b.cmdmainlabel(for='cmdMainSubmit') SUBMIT
+				div.cmdmenureport.hide(id='cmdMainProcess')
+					a(id='cmdMainProcess')
+						i.cmdmainicon(id='cmdMainProcess' style="font-size:1.5rem" 
+							class='bi bi-table' data-toggle="tooltip" data-placement="top"
+							title="Process")
+						b.cmdmainlabel(for='cmdMainProcess') PROCESS
+				div.cmdmenuprint.hide(id='cmdMainPrint')
+					a(id='cmdMainPrint')
+						i.cmdmainicon(id='cmdMainPrint'
+							class='bi bi-printer' data-toggle="tooltip" data-placement="top"
+							title="Print")
+						b.cmdmainlabel(for='cmdMainPrint') PRINT
+			include gptFrontPage.pug
+			include gptSession.pug
+			include gptStats.pug
+			include gptUser.pug
+			include gptSystem.pug
+		div.mainbottommenu.fixed-bottom(id="idMainBottomMenu")

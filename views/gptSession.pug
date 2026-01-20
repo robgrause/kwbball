@@ -1,0 +1,80 @@
+block content
+	div(id='divSessionNew')
+		div.row.mt-2
+			div.col-6.text-start
+				label(id='labelSessionType') SESSION
+			div.col-6.text-end
+				button.aGPT(id="btnSessionStart", title='new') START SESSION
+		div.row.mt-2
+			div.col-md-6
+				div(class="form-group form-floating")
+					select(class='form-select',id="f_session_playerid" placeholder="")
+					label.labelRequired(class="form-label" for="f_session_playerid") Player
+		div.row.mt-4
+			div.col-md-6
+				div(class="form-group form-floating")
+					input(class='form-control' type="datetime-local" id="f_session_date", placeholder="")
+					label(for="f_session_date") Date & Time
+		div(id='divSessionDataId')
+			div.hide(id='divBullpenDataId')
+			div.hide(id='divScrimmageDataId')
+			div.hide(id='divGameDataId')
+				div.row.mt-2
+					div.col-md-6
+						div(class="form-group form-floating")
+							input(class='form-control text-capitalize',type="text", onclick="this.select()" id="f_session_opponent", list = "list_Opponent", placeholder="opponent")
+							label.labelText(class='form-label' for="f_session_opponent") Opponent
+							datalist(id="list_Opponent")
+					div.col-md-6
+						div(class="form-group form-floating")
+							input(class='form-control text-capitalize',type="text", onclick="this.select()" id="f_session_umpire", list = "list_Umpire", placeholder="umpire")
+							label.labelText(class='form-label' for="f_session_umpire") Umpire
+							datalist(id="list_Umpire")
+	div.sessionsmain_wrapper(id='divSessions')
+		div.cmd1.sessionbullpen(id='cmdSessionBullpen')
+			label BULLPEN
+		div.cmd2.sessionscrimmage(id='cmdSessionScrimmage')
+			label SCRIMMAGE
+		div.cmd3.sessiongame(id='cmdSessionGame')
+			label GAME
+	div.pitchmain(id='divPitchMainId')
+		div.pitchdatacontrols(id='divPitchDataId')
+			div.pitchstop(id='divPitchStopId')
+			div.row
+				div.col-6.text-start
+					label(id='labelPlayerId')
+				div.col-6.text-end
+					label(id='labelSessionLengthId')
+			div.row.mt-2(id='divPitchTableParentId')
+				div.col-12
+					table.pitchtable(id="tblSessionPitches",
+							class="table table-striped table-bordered table-sm")
+						thead
+						tbody
+						tfoot
+							tr(id='tableFooterRow')
+								th Total:
+		div.pitchviewcontrols(id='divPitchViewId')
+			div.pitchtype(id='divPitchTypeId')
+				div.pitchtypedown(id='divPitchTypeDownId')
+				div.pitchtypeselect(id='divPitchTypeSelectId')
+				div.pitchtypeup(id='divPitchTypeUpId')
+			div.pitchbatter.hide(id='divPitchBatterId')
+				div.row
+					div.col-4
+						label Right
+					div.col-4
+						label BATTER
+					div.col-4
+						label Left
+				div.row
+					div.col-4
+						input.form-check-input(type='radio',checked,name='pitchbatter',id='pitchbatterRightOptionId',value=0)
+					div.offset-4.col-4
+						input.form-check-input(type='radio',name='pitchbatter',id='pitchbatterLeftOptionId',value=0)
+			div.pitchviewwrapper(id="divPitchParentId")
+			div.pitchaction(id='divPitchActionId')
+				div.pitchactiondown(id='divPitchActionDownId')
+				div.pitchactionselect(id='divPitchActionSelectId')
+				div.pitchactionup(id='divPitchActionUpId')
+			div.pitchrecord(id='divPitchRecordId')

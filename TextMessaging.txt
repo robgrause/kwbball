@@ -1,0 +1,26 @@
+att :	10 digit @txt.att.net
+verizon: 10digit @vtext.com
+sprint: 10digit @messaging.sprint.com
+tmobile : 10digit @tmomail.net
+
+
+AT&T – cell-phone-number@txt.att.net
+Sprint – cell-phone-number@messaging.sprintpcs.com
+
+T-Mobile – cell-phone-number@tmomail.net
+Verizon – cell-phone-number@vtext.com
+
+All Tell – cell-phone-number@@message.alltel.com
+Boost – cell-phone-number@myboostmobile.com
+Cellular South – cell-phone-number@csouth1.com
+Centennial Wireless – cell-phone-number@cwemail.com
+Cincinnati Bell – cell-phone-number@gocbw.com
+Cricket Wireless – cell-phone-number@sms.mycricket.com
+Metro PCS – cell-phone-number@mymetropcs.com
+Powertel – cell-phone-number@ptel.net
+Qwest – cell-phone-number@qwestmp.com
+Rogers – cell-phone-number@pcs.rogers.com
+Suncom – cell-phone-number@tms.suncom.com
+Telus – cell-phone-number@msg.telus.com
+U.S. Cellular – cell-phone-number@email.uscc.net
+Virgin Mobile USA – cell-phone-number@vmobl.com

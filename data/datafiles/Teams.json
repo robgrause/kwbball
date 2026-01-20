@@ -1,0 +1,16 @@
+{
+"teams" :[
+			{
+			"f_name" : "Varsity",
+			"f_date_created" : null
+			},
+			{
+			"f_name" : "JV",
+			"f_date_created" : null
+			},
+			{
+			"f_name" : "Freshmen",
+			"f_date_created" : null
+			}
+		]
+}
