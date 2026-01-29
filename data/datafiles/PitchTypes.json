@@ -2,23 +2,23 @@
 "types" :[
 			{
 			"f_name" : "4 Seam",
-			"f_date_created" : null
+			"f_id": 1
 			},
 			{
 			"f_name" : "2 Seam",
-			"f_date_created" : null
+			"f_id": 2
 			},
 			{
 			"f_name" : "Changeup",
-			"f_date_created" : null
-			},
+			"f_id": 3
+			},		
 			{
 			"f_name" : "Slider",
-			"f_date_created" : null
+			"f_id": 4
 			},
 			{
 			"f_name" : "Curve",
-			"f_date_created" : null
+			"f_id": 5
 			}
 		]
 }

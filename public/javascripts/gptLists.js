@@ -52,18 +52,28 @@ var gptlist =
 		$elem.val(nowMth);
         },
       
-	buildYearDropdown:function(cntId,nowYear)
+	buildSearchDateRangeDropdown:function(cntId,includecareer)
 		{
 		var $elem = $('#'+ cntId);
 		$elem.find('option').remove();
-		var startYear = 2026;
-		var endYear = startyear + 50;;
-		for (var i = startYear; i <= endYear; i++) 
+		
+		var option = new Option (defines.daterange.str.week, defines.daterange.week);
+		$elem.append($(option));
+		var option = new Option (defines.daterange.str.month, defines.daterange.month);
+		$elem.append($(option));
+		var option = new Option (defines.daterange.str.season, defines.daterange.season);
+		$elem.append($(option));
+	
+		if ( (includecareer != undefined) && (includecareer == true) )
 			{
-			var option = new Option (i, i);
-            $elem.append($(option));
+			var option = new Option (defines.daterange.str.career, defines.daterange.career);
+			$elem.append($(option));
 			}
-		$elem.val(nowYear);
+
+		var option = new Option (defines.daterange.str.all, defines.daterange.all);
+		$elem.append($(option));
+
+		$elem.val(defines.daterange.season);
 		},
 		
 	getStatusName:function(status)
@@ -103,6 +113,22 @@ var gptlist =
 		if (list.length > 0)
 			$elem.val(list[0].f_id)
 		},
+	
+	getPlayerPitchList:function(pitchids,pitchlist)	
+		{
+		var list = [];	
+		for (var i = 0; i < pitchids.length; i++)
+			{
+			var item = gptlist.getItemFromList(pitchids[i],pitchlist)
+			if (item)
+				list.push(item);
+			}
+			
+		if (list.length <= 0)
+			return(pitchlist)
+		else
+			return(list);
+		},
 	getItemFromList:function (id,list)
 		{
 		for (var i = 0; i < list.length; i++)
@@ -113,6 +139,17 @@ var gptlist =
 		return(null);
 		},
 	
+		
+	getIdFromList:function(list,fieldSearchId,value,fieldId)
+		{
+		for (var i = 0; i < list.length; i++)
+			{
+			if (value == list[i][fieldSearchId])
+				return(list[i][fieldId]);
+			}
+		return('')
+		},
+		
 	buildClassYearDropdown:function(cntId)
 		{
 		var $elem = $('#'+ cntId);
@@ -145,6 +182,30 @@ var gptlist =
 		$elem.val(defines.status.active);
 		},
 	
+	buildSessionTypeDropdown:function(cntId,includeAll)
+		{
+		var $elem = $('#'+ cntId);
+
+		$elem.find('option').remove();
+		
+		if (includeAll == true)
+			{
+			var option = new Option (defines.sessiontype.str.all, defines.sessiontype.all);
+			$elem.append($(option));
+			}
+			
+		var option = new Option (defines.sessiontype.str.bullpen, defines.sessiontype.bullpen);
+		$elem.append($(option));
+		
+		var option = new Option (defines.sessiontype.str.scrimmage, defines.sessiontype.scrimmage);
+		$elem.append($(option));
+		
+		var option = new Option (defines.sessiontype.str.game, defines.sessiontype.game);
+		$elem.append($(option));
+		
+		$elem.val(defines.sessiontype.game);
+		},
+
 	listFromList:function(results,fieldStr,fieldId,listId)
 		{
 		var $elem = $('#' + listId);
@@ -165,93 +226,68 @@ var gptlist =
 
 		$elem.val('');
 		},
-		
-	listPropertyCallback:function(results,params)
-		{
-		var $elem = $("#" + params.listId);
-		$elem.find('option').remove();
-		for (var i = 0; i < results.length; i++)
-			{
-			//var option = new Option ();
-			//option.value = results[i].Field;
-			//option.label = results[i].DisplayName;
-			var option = new Option (results[i].DisplayName, results[i].Field);
-			$elem.append(option);
-			}
-			
-		// this is set for back button return to search screen
-		if (gptcomm.gblListParams != undefined)
-			$elem.val(gptcomm.gblListParams.fieldName)
-		else
-			$elem.val("");
-		},
 
-	listProperty:function(tblName,listId)
+	listValue:function(tblName, fieldName,listId,callback)
 		{
-		var listParams = new defines.objListParams('propertylist');
+		var listParams = new defines.objListParams('valuelist');
 		listParams.tblName = tblName;
+		listParams.fieldName = fieldName;
 		listParams.listId = listId;
-
-		gptcomm.getObjList(listParams, this.listPropertyCallback);
-		},
-	
-	listValueCallback:function(results,params)
-		{
-		var $elem = $('#' + params.listId);
-		$elem.find('option').remove();
-
-		if (results.length <= 0)
-			return;
-			
-		for (var i = 0; i < results.length; i++)
+		
+		gptmain.waitingFlag = true;
+		gptcomm.getObjList(listParams, function(results,params)
 			{
-			var val = results[i];
-			
-			var option = new Option ();
-			option.value = val;
-			$elem.append($(option));
-			}
+			var $elem = $('#' + params.listId);
+			$elem.find('option').remove();
+			if (results.length <= 0)
+				return;
 
-		$elem.val('');
+			for (var i = 0; i < results.length; i++)
+				{
+				var val = results[i];
+			
+				var option = new Option ();
+				option.value = val;
+				$elem.append($(option));
+				}
+
+			$elem.val('');
+			
+			gptmain.waitingFlag = false;
+			});
+			
+		gptmain.waitToComplete(callback);
 		},
 		
-	listValue:function(tblName, fieldName,listId)
+	listOptionValue:function(tblName, fieldName,listId,callback)
 		{
 		var listParams = new defines.objListParams('valuelist');
 		listParams.tblName = tblName;
 		listParams.fieldName = fieldName;
 		listParams.listId = listId;
 
-		gptcomm.getObjList(listParams, this.listValueCallback);
-		},
-		
-	listOptionValueCallback:function(results,params)
-		{
-		var $elem = $('#' + params.listId);
+		var $elem = $('#' + listId);
 		$elem.find('option').remove();
-
-		if (results.length <= 0)
-			return;
 			
-		for (var i = 0; i < results.length; i++)
+		gptmain.waitingFlag = true;
+		gptcomm.getObjList(listParams,function(results,params)
 			{
-			var val = results[i].trim();
+			if (results.length <= 0)
+				return;
 			
-			var option = new Option (val);
-			$elem.append($(option));
-			}
+			for (var i = 0; i < results.length; i++)
+				{
+				var val = results[i].trim();
+			
+				var option = new Option (val, val);
+				$elem.append($(option));
+				}
 
-		$elem.val('');
-		},
-		
-	listOptionValue:function(tblName, fieldName,listId)
-		{
-		var listParams = new defines.objListParams('valuelist');
-		listParams.tblName = tblName;
-		listParams.fieldName = fieldName;
-		listParams.listId = listId;
-
-		gptcomm.getObjList(listParams, this.listOptionValueCallback);
+			$elem.val('');
+			gptmain.waitingFlag = false;
+			});
+			
+		gptmain.waitToComplete(callback);
 		},
 	listBuildFromList:function(list,cntlId)
 		{
@@ -266,6 +302,7 @@ var gptlist =
 			var val = list[i].trim();
 			
 			var option = new Option (val);
+			
 			$elem.append($(option));
 			}
 

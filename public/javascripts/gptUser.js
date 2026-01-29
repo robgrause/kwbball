@@ -124,20 +124,7 @@ var gptuser =
 		if (e.target.value.length > 0)
 			gptlist.listValue(defines.tblUsers,e.target.value,'list_UserSearchValue');
 		},
-/*	
-	callbackCmd:function(obj,apiCmd)
-		{
-		if (apiCmd == 'userdelete')
-			{
-			gptmain.activeUser = obj;
-			gptmain.setStatusLabel("user deleted");
-			gptmain.activeUser = new defines.objUser();
-			gptuser.setFieldsInPropertiesForm(gptmain.activeUser);
-			gptmain.replaceMainBackCmd('cmdUserEdit', 'cmdUserNew');
-			gptmain.processMainBack();
-			}
-		},
-*/
+
 	validate:function(obj)
 		{
 		if (obj.f_fname.length <= 0)
@@ -265,7 +252,7 @@ var gptuser =
 				gptmain.getStartupData(function()
 					{
 					gptmain.showFrontPage();
-					kwbball.buildBottomMenu(gptmain.loginUser.f_typeid);
+					/*kwbball.buildBottomMenu(gptmain.loginUser.f_typeid);*/
 					});
 				}
 			});

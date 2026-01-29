@@ -48,7 +48,7 @@
      
     --btn-font-size:1.0rem; /*0.95rem;*/
     
-    --input-form-height:70px !important;
+    --input-form-height:55px !important;
     --input-form-fontsize-multiplier:1.75;
     
     --strikezone-horizontalflex:100%;
@@ -68,7 +68,7 @@
      
     --btn-font-size:1.0rem;
 
-    --input-form-height:70px !important;
+    --input-form-height:55px !important;
     --input-form-fontsize-multiplier:1.75;
     
     --strikezone-horizontalflex:100%;
@@ -87,7 +87,7 @@
 
     --btn-font-size:1.0rem;
     
-    --input-form-height:70px !important;
+    --input-form-height:55px !important;
     --input-form-fontsize-multiplier:1.75;
     
     --strikezone-horizontalflex:100%;
@@ -106,7 +106,7 @@
     
     --btn-font-size:1.1rem;
     
-    --input-form-height:68px !important;
+    --input-form-height:55px !important;
     --input-form-fontsize-multiplier:1.45;
     
     --strikezone-horizontalflex:100%;
@@ -125,8 +125,8 @@
 
     --btn-font-size:1.1rem;
 
-    --input-form-height:68px !important;
-    --input-form-fontsize-multiplier:1.45;
+    --input-form-height:55px !important;
+    --input-form-fontsize-multiplier:1.25;
     
     --strikezone-horizontalflex:60%;
     --strikezone-verticalflex:60%;
@@ -143,11 +143,9 @@
     --body-font-size:12px;
 
     --btn-font-size:1.1rem;
-
-    --sheetform-screen-width:0 0 35%;
     
-    --input-form-height:68px !important;
-    --input-form-fontsize-multiplier:1.45;
+    --input-form-height:55px !important;
+    --input-form-fontsize-multiplier:1.25;
     
     --strikezone-horizontalflex:60%;
     --strikezone-verticalflex:60%;
@@ -325,24 +323,33 @@ table.data.display tbody tr.selectedRow td {
 pitchtable
     {
     width:100%;
-    font-weight:400 !important;
-    font-size:1.0rem;
     }
 
-table.pitchtable thead th {
-    background-color:inherit;
+table.pitchtable thead tr th {
+    background-color:inherit !important;
     color:inherit;
+    text-align:center !important;
+    font-weight:500 !important;
+    font-size:1.0rem;
+    border:1px solid black !important;
     }
 table.pitchtable tbody tr td {
     background-color:inherit;
     color:inherit;
-    text-align:left;
+    font-weight:500 !important;
+    font-size:1.0rem;
+    text-align:center !important;
+    border:1px solid black;
     }
+table.pitchtable tfoot tr th,
 table.pitchtable tfoot tr td {
-    background-color:inherit;
+    background-color:inherit !important;
     color:inherit;
-    text-align:left;
-    border-top:2px double black;
+    font-weight:500 !important;
+    font-size:1.0rem;
+    text-align:center;
+    border:1px solid black !important;
+    border-top:2px double black !important;
     }
 
 .cmdHighlight 
@@ -399,7 +406,7 @@ table.pitchtable tfoot tr td {
     {
     display: grid;
     grid-gap: 0px;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(3,1fr);
     
     color:inherit;
     background-color:#FAF9F6;
@@ -437,7 +444,7 @@ table.pitchtable tfoot tr td {
     width:100%;
     height:50%;
     border:1px solid black;
-    border-radius:10px;
+    border-radius:5px;
     
     align-items:center;
 	justify-content:center;
@@ -475,7 +482,7 @@ table.pitchtable tfoot tr td {
     background-color:var(--button-bgcolor);
     color:var(--button-color);
     border:var(--button-border);
-    border-radius:10px;
+    border-radius:5px;
     
     font-weight:700;
     font-size:var(--btn-font-size);
@@ -516,29 +523,40 @@ table.pitchtable tfoot tr td {
     opacity:0.40;
 }
 
+.form-label
+    {
+   
+    }
 
 .form-control,
 .form-select
     {
+/*
+    font-size:1.5rem;
+*/
+    font-size:calc(var--input-form-fontsize-multiplier) * var(--body-font-size)) !important;
+    height:var(--input-form-height) !important;
     border-radius:10px;
+    background-color:#EBEBEB !important;
     }
 .form-control[disabled],
 .form-select[disabled] {
     background-color:#dbdcd8;
 }
 
-/*label{color:black;}*/
 .labelBold {font-weight:500;}
 .labelRequired
     {
     font-weight:500;
     color:red !important;
+    text-transform: capitalize;
     }
 /* This is required for floating input[text] to show */
 .labelText,.labelCenter
     {
     font-weight:500;
     color:#000000 !important;
+    text-transform: capitalize;
     }
 .labelCenter
     {
@@ -1023,7 +1041,7 @@ input[type=checkbox]
     margin-top:1.0rem;
     }
 
-.pitchrecord,.pitchstop,.statsearchfind
+.pitchrecord,.pitchstop
     {
     font-size:1.75rem;
     font-weight:500;
@@ -1045,14 +1063,9 @@ input[type=checkbox]
 .pitchstop
     {
     width:auto;
+    max-width:8.0rem;
     margin-top:0.0rem;
     margin-bottom:1.0rem;
-    align-self:left;
-    }
-    
-.statsearchfind
-    {
-    width:auto;
     align-self:left;
     }
     

@@ -1,6 +1,6 @@
 var gptsession = 
 	{	
-	divPitchId: 		'divPitchParentId',
+	divPitchId: 'divPitchParentId',
 	typeid:undefined,
 	player:undefined,
 	session:undefined,
@@ -12,39 +12,44 @@ var gptsession =
 	getDisplayString:function(data,fieldType,row,meta)
 		{
 		var retVal = '';
-		if (fieldType == 'f_pitchtype')
-			retVal = row.f_pitchtype.f_name;
+		if (fieldType == 'f_pitchtypeid')
+			retVal = gptlist.getIdFromList(gptmain.pitchtypeList,'f_id',row.f_typeid,'f_name')
 		else
 			{
-			var pitchcount = 0;
-			for (var i = 0; i < row.f_actionresults.length; i++)
+			var pc = 0;
+			for (var i = 0; i < row.f_results.length; i++)
 				{
-				if (row.f_actionresults[i].f_pitchcount == true)
+				if (row.f_results[i].f_pc != 0)
 					{
-					pitchcount = row.f_actionresults[i].f_count;
+					pc = row.f_results[i].f_c;
 					break;
 					}
 				}
 			var colName = meta.settings.aoColumns[meta.col].ariaTitle;
-			for (var i = 0; i < row.f_actionresults.length; i++)
+			for (var i = 0; i < row.f_results.length; i++)
 				{
-				if (colName == row.f_actionresults[i].f_name)
+				if (row.f_results[i].f_name != undefined)
+					var testColname = row.f_results[i].f_name;
+				else
+					var testColname = gptlist.getIdFromList(gptmain.pitchactionList,'f_id',row.f_results[i].f_id,'f_name')
+
+				if (colName == testColname)
 					{
-					if (row.f_actionresults[i].f_percent == true)
+					if (row.f_results[i].f_pct != 0)
 						{
-						if (pitchcount == 0)
-							var percentage = '(0%)';
+						if (pc == 0)
+							var percentage = ' (0%)';
 						else
 							{
 							var percentage = 
-								gptma.mathRoundup ((row.f_actionresults[i].f_count / pitchcount) * 100, 0);
+								gptma.mathRoundup ((row.f_results[i].f_c / pc) * 100, 0);
 
-							percentage = '(' + percentage + '%)';
+							percentage = ' (' + percentage + '%)';
 							}
-						retVal = row.f_actionresults[i].f_count + percentage;
+						retVal = row.f_results[i].f_c + percentage;
 						}
 					else
-						retVal = row.f_actionresults[i].f_count;
+						retVal = row.f_results[i].f_c;
 					break;
 					}
 				}
@@ -58,13 +63,17 @@ var gptsession =
 		var columns = [
 						{ title: 'Pitch', data: null,
 									render: function (data,type,row,meta){
-									return (gptsession.getDisplayString(data, 'f_pitchtype', row,meta)); }},
+									return (gptsession.getDisplayString(data, 'f_pitchtypeid', row,meta)); }},
 						];
 						
 		var numtargets = [0];
 		for (var i = 0; i < columnlist.length; i++)
 			{
-			var field = columnlist[i].f_name;
+			if (columnlist[i].f_name != undefined)
+				var field = columnlist[i].f_name;
+			else
+				var field = gptlist.getIdFromList(gptmain.pitchactionList,'f_id',columnlist[i].f_id,'f_name')
+			
 			columns.push (	{ title:field, data: null,
 					render: function (data,type,row,meta){
 					return (gptsession.getDisplayString(data,'',row,meta)); }})
@@ -74,7 +83,7 @@ var gptsession =
 		
 		var dataTable = $('#' + tblName).dataTable({
 					columns: columns,
-					columnDefs: [	{ className: 'text-start', targets:numtargets}, 
+					columnDefs: [	{ className: 'text-center', targets:numtargets}, 
 									{ targets:numtargets, 'width': '10px' }
 									],
 					searching: false,
@@ -90,45 +99,41 @@ var gptsession =
 						{
 						var totalPitchCount = 0;
 						var totalStrikeCount = 0;
-						for (var i = 0;	i < gptsession.session.f_pitchtyperesults.length; i++) 
+						for (var i = 0;	i < gptsession.session.f_results.length; i++) 
 							{
-							var result = gptsession.session.f_pitchtyperesults[i];
+							var result = gptsession.session.f_results[i];
 							
-							for(var k = 0; k < result.f_actionresults.length; k++)
+							for(var k = 0; k < result.f_results.length; k++)
 								{
-								if (result.f_actionresults[k].f_pitchcount == true)
+								if (result.f_results[k].f_pc != 0)
 									totalPitchCount = parseInt(totalPitchCount) +
-												parseInt(result.f_actionresults[k].f_count);
+												parseInt(result.f_results[k].f_c);
 								
-								else if (result.f_actionresults[k].f_strikecount == true)
+								else if (result.f_results[k].f_sc != 0)
 									totalStrikeCount = parseInt(totalStrikeCount) +
-												parseInt(result.f_actionresults[k].f_count);
+												parseInt(result.f_results[k].f_c);
 								}
 							}
 						for (var iCol = 0; 
-								iCol < gptsession.session.f_pitchtyperesults[0].f_actionresults.length; iCol++) 
+								iCol < gptsession.session.f_results[0].f_results.length; iCol++) 
 							{
 							var total = 0;
-							for (var iResult = 0; 
-									iResult < gptsession.session.f_pitchtyperesults.length; iResult++) 
+							for (var iRow = 0; 
+									iRow < gptsession.session.f_results.length; iRow++) 
 								{
-								var result = gptsession.session.f_pitchtyperesults[iResult];
+								var result = gptsession.session.f_results[iRow];
 								
-								var subtotal = result.f_actionresults[iCol].f_count;
-								
-								total = parseInt(total) + parseInt(subtotal);
+								total = parseInt(total) + parseInt(result.f_results[iCol].f_c);
 								}
-								
-							total = gptma.mathTrunc(total,2);
 							
-							if (gptsession.session.f_pitchtyperesults[0].f_actionresults[iCol].f_percent == true) 
+							if (gptsession.session.f_results[0].f_results[iCol].f_pct != 0) 
 								{
 								if (totalPitchCount == 0)
 									var percent = 0;
 								else
 									var percent = gptma.mathRoundup ((total / totalPitchCount) * 100,0);
 								
-								total = total + '(' + percent + '%)';
+								total = total + ' (' + percent + '%)';
 								}
 							// update footer
 							// need to add 1 to column index because first column
@@ -147,61 +152,9 @@ var gptsession =
 		var selectElem = document.getElementById('divPitchActionSelectId');
 		var actionlist = JSON.parse(selectElem.getAttribute('data-list'));
 
-		session.f_pitchtyperesults = [];
+		session.f_results = 
+					defines.initializeSessionResultSummary(typelist,actionlist,session.f_typeid);
 
-		for(var i = 0; i < typelist.length; i++)
-			{
-			var result = new defines.objPitchTypeResults();
-			result.f_pitchtype = typelist[i];
-			
-			result.f_actionresults = [];
-			
-			actiontype = new defines.objPitchAction()
-			actiontype.f_id = 0;
-			actiontype.f_name = 'Count';
-			actiontype.f_pitchcount = true;
-			actiontype.f_isstrike = false;
-			actiontype.f_strikecount = false;
-			actiontype.f_count = 0;
-			actiontype.f_percent = false;
-			actiontype.f_hitlocation = false;
-			result.f_actionresults.push(actiontype);
-
-			if (session.f_typeid != defines.sessiontype.bullpen)
-				{
-				actiontype = new defines.objPitchAction()
-				actiontype.f_id = 0;
-				actiontype.f_name = 'Strikes';
-				actiontype.f_pitchcount = false;
-				actiontype.f_isstrike = false;
-				actiontype.f_strikecount = true;
-				actiontype.f_count = 0;
-				actiontype.f_percent = true;
-				actiontype.f_hitlocation = false;
-				result.f_actionresults.push(actiontype);
-				}
-				
-			actiontype = new defines.objPitchAction()
-			actiontype.f_id = 0;
-			actiontype.f_name = 'Hit Location';
-			actiontype.f_pitchcount = false;
-			actiontype.f_isstrike = false;
-			actiontype.f_strikecount = false;
-			actiontype.f_count = 0;
-			actiontype.f_hitlocation = true;
-			actiontype.f_percent = true;
-			result.f_actionresults.push(actiontype);
-			
-			for(var j = 0; j < actionlist.length; j++)
-				{
-				var actiontype = actionlist[j];
-				actiontype.f_count = 0;
-				actiontype.f_percent = 0;;
-				actiontype.f_hitlocation = false;
-				result.f_actionresults.push(actiontype)
-				}
-			session.f_pitchtyperesults.push(result);
-			}
 		return(session);
 		},	
 		
@@ -231,19 +184,20 @@ var gptsession =
 
 	buildPitchTable:function()
 		{	
-		if (gptsession.session.f_pitchtyperesults.length > 0)
+		if (gptsession.session.f_results.length > 0)
 			{
 			// Dynamically add th elements to footer before initialization
 			var footerTrElem = document.getElementById('tableFooterRow');
-			for (var i = 0; i < gptsession.session.f_pitchtyperesults[0].f_actionresults.length; i++)
+			for (var i = 0; i < gptsession.session.f_results[0].f_results.length; i++)
 				{
 				var thElem = document.createElement('th');
 				footerTrElem.appendChild(thElem)
 				}
 
 			gptsession.initializeSessionPitchList('tblSessionPitches',
-													gptsession.session.f_pitchtyperesults[0].f_actionresults);
-			gpttb.tableAddResultsToTable(gptsession.session.f_pitchtyperesults,null,'tblSessionPitches',null,null);
+													gptsession.session.f_results[0].f_results);
+													
+			gpttb.tableAddResultsToTable(gptsession.session.f_results,null,'tblSessionPitches',null,null);
 			}
 			
 		var tableElem = document.getElementById('tblSessionPitches')
@@ -1102,7 +1056,7 @@ return;
 		
 /*		
 		
-		this.f_velocity = 0;
+		this.f_vel = 0;
 		this.f_inning = 0;
 */		
 		var callelems = document.getElementsByClassName('pitchbox_call_highlight')
@@ -1125,15 +1079,15 @@ return;
 				throwregion = region.f_name;
 			}
 
-		pitch.f_calllocation = callregion;
-		pitch.f_throwlocation = throwregion;
-		
+		pitch.f_cl = callregion;
+		pitch.f_hl = throwregion;
+
 		gptut.removeClassAllElements('pitchbox_call_highlight')
 		gptut.removeClassAllElements('pitchbox_throw_highlight')
 		
-		pitch.f_batterleftright = defines.leftright.right;
+		pitch.f_bstance = defines.leftright.right;
 		if ($('#pitchbatterLeftOptionId').prop('checked') == true)
-			pitch.f_batterleftright = defines.leftright.left;
+			pitch.f_bstance = defines.leftright.left;
 		
 		return(pitch)
 		},
@@ -1145,68 +1099,66 @@ return;
 		gptut.removeClassAllElements('pitchbox_call_highlight')
 		gptut.removeClassAllElements('pitchbox_throw_highlight')
 		
-		// add to results
-		for (var i = 0; i < gptsession.session.f_pitchtyperesults.length; i++)
-			{
-			var result = gptsession.session.f_pitchtyperesults[i];
+		var hlIndex = -1;
+		var scIndex = -1;
+		var pcIndex = -1;
+		var result  = gptsession.session.f_results[0];
 			
-			if (pitch.f_typeid == result.f_pitchtype.f_id)
-				{
-				var isStrike = false;
-				if (pitch.f_actionid > 0)
-					{
-					for (var j = 0; j < result.f_actionresults.length; j++)
-						{
-						if (pitch.f_actionid == result.f_actionresults[j].f_id)
-							{
-							var pitchaction = result.f_actionresults[j];
-					
-							pitchaction.f_count++;
-							isStrike = pitchaction.f_isstrike;
-							break;
-							}
-						}
-					}
+		for (var j = 0; j < result.f_results.length; j++)
+			{
+			if (result.f_results[j].f_pc != 0)
+				pcIndex = j;
+			else if (result.f_results[j].f_sc != 0)
+				scIndex = j;
+			else if (result.f_results[j].f_hl != 0)
+				hlIndex = j;
+			}
+			
+		// add to results
+		for (var i = 0; i < gptsession.session.f_results.length; i++)
+			{
+			var result = gptsession.session.f_results[i];
+			
+			if (pitch.f_typeid != result.f_typeid)
+				continue;
 				
-				// update pitchtype count and strike count
-				for (var k = 0; k < result.f_actionresults.length; k++)
-					{
-					var pitchcount = result.f_actionresults[k];
-								
-					if (pitchcount.f_pitchcount == true)
-						pitchcount.f_count++;
-					else if ( (isStrike == true) && (pitchcount.f_strikecount == true) )
-						pitchcount.f_count++;
-					}
+			if (	(gptsession.session.f_typeid != defines.sessiontype.bullpen) &&
+					(pitch.f_actionid <= 0)	)
+				continue;
 
-				// update hit location
-				for (var k = 0; k < result.f_actionresults.length; k++)
-					{
-					var pitchcount = result.f_actionresults[k];
-					
-					if (pitchcount.f_hitlocation == true)
-						{
-						if ( 	(pitch.f_calllocation != '') &&
-								(pitch.f_throwlocation != '') &&
-								(pitch.f_calllocation == pitch.f_throwlocation != '') )
-							pitchcount.f_count++;
-						}
-					}
+			for (var j = 0; j < result.f_results.length; j++)
+				{
+				if (	(gptsession.session.f_typeid != defines.sessiontype.bullpen) &&
+						(pitch.f_actionid != result.f_results[j].f_id) )
+					continue;
+				
+				if (pcIndex >= 0)
+					result.f_results[pcIndex].f_c++;
+
+				if ( (scIndex >= 0) && (result.f_results[j].f_iss != 0) )
+					result.f_results[scIndex].f_c++;
+
+				if ( (hlIndex >= 0) && (pitch.f_cl != '') && (pitch.f_cl == pitch.f_hl) )
+					result.f_results[hlIndex].f_c++;	
+												
+				if (result.f_results[j].f_id != 0)
+					result.f_results[j].f_c++;
 					
 				var tableDataObjs = gpttb.tableGetDataObjects('tblSessionPitches');
 				for (var k = 0; k < tableDataObjs.length; k++)
 					{
-					if (tableDataObjs[k].f_pitchtype.f_id == result.f_pitchtype.f_id)
+					if (tableDataObjs[k].f_typeid == result.f_typeid)
 						{
 						gpttb.tableUpdateByIndex (result, k, 'update', 'tblSessionPitches');
+
+						gptsession.session.f_pitches.push(pitch);
+
 						break;
 						}
 					}
-						
-				gptsession.session.f_pitches.push(pitch);
-				
+							
 				gptindb.writeToDB(gptindb.dbobj_session,gptsession.session);
-				break;
+				return;
 				}	
 			}
 		},
@@ -1214,7 +1166,7 @@ return;
 	onclickPitchStop:async function(e)
 		{
 		var session = await gptindb.readFromDB(gptindb.dbobj_session,gptsession.session.f_id)
-	
+
 		if(session.f_pitches.length <= 0)
 			{
 			modal.displayModalOpen ("WARNING","NO PITCHES have been record during this session.",
@@ -1230,7 +1182,7 @@ return;
 			if (retMode == modal.modalParams.exit.exitYes)
 				{
 				var session = await gptindb.readFromDB(gptindb.dbobj_session,gptsession.session.f_id)
-
+				
 				await gptindb.writeToDB(gptindb.dbobj_sessionsubmitted,session);
 				await gptindb.deleteFromDB(gptindb.dbobj_session,session.f_id);
 
@@ -1239,9 +1191,10 @@ return;
 			
 				gptsession.session = {};
 				gptsession.player = {};
+				gptmain.showFrontPage();
 				}
 			else
-				gptmain.processMainBack();
+				gptmain.showFrontPage();
 			});					
 		},
 	buildPitchView:function(session,player)
@@ -1269,19 +1222,14 @@ return;
 		
 		gptsession.buildPitchBox();
 		
-		var list = [];	
-		for (var i = 0; i < player.f_pitchids.length; i++)
-			{
-			var item = gptlist.getItemFromList(player.f_pitchids[i],gptmain.pitchtypeList)
-			if (item)
-				list.push(item);
-			}
+		var list = gptlist.getPlayerPitchList(player.f_pitchids,gptmain.pitchtypeList)
+	
 		gptsession.buildPitchTypeList(list);
-		
+	
 		gptsession.buildPitchActionList(session.f_typeid);
-		
+
 		// initialize results
-		gptsession.session = gptsession.initializeSessionResults(gptsession.session);
+		return(gptsession.initializeSessionResults(session));
 		},
 		
 	validateSession:function(session)
@@ -1422,7 +1370,7 @@ return;
 			gptut.setDivShowState('divSessionDataId',false,false);
 			gptut.setShowState('divBullpenDataId',true);
 				
-			gptsession.buildPitchView(gptsession.session,gptsession.player);
+			gptsession.session = gptsession.buildPitchView(gptsession.session,gptsession.player);
 			gptsession.buildPitchTable();
 			
 			gptmain.startSessionLengthInterval(5);
@@ -1440,7 +1388,7 @@ return;
 			gptut.setDivShowState('divSessionDataId',false,false);
 			gptut.setShowState('divScrimmageDataId',true);
 
-			gptsession.buildPitchView(gptsession.session,gptsession.player);
+			gptsession.session = gptsession.buildPitchView(gptsession.session,gptsession.player);
 			gptsession.buildPitchTable();
 			
 			gptmain.startSessionLengthInterval(5);
@@ -1458,7 +1406,7 @@ return;
 			gptut.setShowState('divPitchBatterId',true);
 			gptut.setShowState('divPitchActionId',true);
 			
-			gptsession.buildPitchView(gptsession.session,gptsession.player);
+			gptsession.session = gptsession.buildPitchView(gptsession.session,gptsession.player);
 			gptsession.buildPitchTable();
 			
 			gptmain.startSessionLengthInterval(5);

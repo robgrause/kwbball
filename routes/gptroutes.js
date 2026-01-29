@@ -23,10 +23,14 @@ router.get('/api/version', server.gpt_serviceworker_version);
 router.post('/api/startup', server.gpt_startup);
 
 router.post('/api/teamget', server.gpt_team_getall);
+router.post('/api/teamupdate', server.gpt_team_update);
 
 router.post('/api/pitchtypeget', server.gpt_pitchtype_getall);
+router.post('/api/pitchtypeupdate', server.gpt_pitchtype_update);
 
 router.post('/api/pitchactionget', server.gpt_pitchaction_getall);
+router.post('/api/pitchactionupdate', server.gpt_pitchaction_update);
+
 
 router.post('/api/systemcreate', server.gpt_system_add);
 router.post('/api/systemadd', server.gpt_system_add);
@@ -50,6 +54,8 @@ router.post('/api/userupdate', server.gpt_user_update);
 router.post('/api/userdelete', server.gpt_user_delete);
 
 router.post('/api/sessionupload', server.gpt_session_upload);
+
+router.post('/api/statsearch', server.gpt_stat_search);
 
 router.post('/api/checkversion', server.gpt_version_check);
 

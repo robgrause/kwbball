@@ -111,8 +111,6 @@ var dbutils =
 			{
 			if (! pteams.teams[i])
 				break;
-	
-			pteams.teams[i].f_date_created = gptdt.getISODateTime();
 			
 			var sql = "INSERT INTO " + tblName + " SET ?";
 			var results = await db.executeAsync(creds,sql,pteams.teams[i]);
@@ -137,8 +135,6 @@ var dbutils =
 			{
 			if (! ptypes.types[i])
 				break;
-	
-			ptypes.types[i].f_date_created = gptdt.getISODateTime();
 			
 			var sql = "INSERT INTO " + tblName + " SET ?";
 			var results = await db.executeAsync(creds,sql,ptypes.types[i]);
@@ -163,8 +159,6 @@ var dbutils =
 			{
 			if (! pactions.actions[i])
 				break;
-	
-			pactions.actions[i].f_date_created = gptdt.getISODateTime();
 			
 			var sql = "INSERT INTO " + tblName + " SET ?";
 			var results = await db.executeAsync(creds,sql,pactions.actions[i]);
@@ -330,7 +324,7 @@ var dbutils =
 				"f_opponent VARCHAR(100) DEFAULT NULL," +
 				
 				"f_notes VARCHAR(" + parseInt(defines.STR_LENGTH_NOTES  + 1) +")," +
-				"f_pitchtyperesults VARCHAR(500) DEFAULT NULL," +
+				"f_results VARCHAR(5000) DEFAULT NULL," +
 				
 				"PRIMARY KEY (f_id)," +
 				"UNIQUE KEY (f_id))";
@@ -349,14 +343,14 @@ var dbutils =
 				
 				"f_date_created DATETIME," +
 				
-				"f_batterleftright TINYINT," + 
+				"f_bstance TINYINT," + 
 
 				"f_status TINYINT," +
 				"f_inning TINYINT," +
-				"f_velocity DECIMAL(5,2) DEFAULT 0," +
+				"f_vel DECIMAL(5,2) DEFAULT 0," +
 				
-				"f_calllocation VARCHAR(10) DEFAULT NULL," +
-				"f_throwlocation VARCHAR(10) DEFAULT NULL," +
+				"f_cl VARCHAR(10) DEFAULT NULL," +
+				"f_hl VARCHAR(10) DEFAULT NULL," +
 				
 				"f_notes VARCHAR(" + parseInt(defines.STR_LENGTH_NOTES  + 1) +")," +
 				
@@ -370,8 +364,6 @@ var dbutils =
 		console.log("creating table: " + tblName);
 		var sql = "CREATE TABLE " + tblName + " (" +
 				"f_id INT UNSIGNED NOT NULL AUTO_INCREMENT," +
-			
-				"f_date_created DATETIME," +
 			
 				"f_name VARCHAR(50) NOT NULL," +
 				
@@ -387,8 +379,6 @@ var dbutils =
 		var sql = "CREATE TABLE " + tblName + " (" +
 				"f_id INT UNSIGNED NOT NULL AUTO_INCREMENT," +
 			
-				"f_date_created DATETIME," +
-			
 				"f_name VARCHAR(50) NOT NULL," +
 				
 				"PRIMARY KEY (f_id)," +
@@ -401,11 +391,10 @@ var dbutils =
 		console.log("creating table: " + tblName);
 		var sql = "CREATE TABLE " + tblName + " (" +
 				"f_id INT UNSIGNED NOT NULL AUTO_INCREMENT," +
-			
-				"f_date_created DATETIME," +
-				"f_isstrike TINYINT," +
-				"f_strikecount TINYINT," +
-				"f_pitchcount TINYINT," +
+
+				"f_iss TINYINT," +
+				"f_sc TINYINT," +
+				"f_pc TINYINT," +
 				
 				"f_name VARCHAR(50) NOT NULL," +
 

@@ -109,6 +109,7 @@ var gptindb =
 	    };
 	 request.onerror = function(event) 
 	    {
+	    console.log(event.target.errorCode);
 	    reject(null)
 	    };
 	 });
@@ -169,7 +170,7 @@ var gptindb =
 	    };
 	 request.onerror = function(event) 
 	    {
-
+	    console.log(event.target.errorCode);
 	    reject(null)
 	    };
 	 });

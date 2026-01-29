@@ -2,45 +2,37 @@ var prodCache = version.version + "_" + version.client_cache;
 var processMsg = false
 
 const prodAssets = [
-	 '/pwa/swKWBBall.min.js',
-	 '/html/KWBBall.html',
-
-	 '/javascripts/KWBBall.min.js',
-	 '/stylesheets/styleModal.min.css',
-	 '/stylesheets/styleKWBBall.min.css',
-
-	 '/images/favicon-96x96.png',
-	 '/images/favicon.svg',
-	 '/images/favicon.ico',
-	 '/images/apple-touch-icon.png',
-	 
-	 '/images/KWBBallBackground.jpg',
-	 '/images/KWBBallBullpen.png',
-	 '/images/KWBBallGame.png',
-	 '/images/KWBBallScrimmage.jpg',
-	 '/images/KWBBallLogo.svg',
-
-	 'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
-	 'https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js',
-	 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap',
-	 
-	 'https://code.jquery.com/jquery-3.7.1.min.js',
-	 
-	 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',//integrity='sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz' crossorigin="anonymous")
-	 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
-	 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css', //integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin="anonymous")
-	
-	 'https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css',
-	 'https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.min.css',
-	 'https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css',
-	 'https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css',
-	 'https://cdn.datatables.net/2.1.5/css/dataTables.bootstrap5.min.css',
-			
-	 'https://cdn.datatables.net/2.1.5/js/dataTables.min.js',
-	 'https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js',
-	 'https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js',
-	 'https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js',
-	 'https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.min.js'
+	 "/images/favicon-96x96.png",
+	 "/images/favicon.svg",
+	 "/images/favicon.ico",
+	 "/images/apple-touch-icon.png",
+	 "/images/KWBBallBackground.jpg",
+	 "/images/KWBBallBullpen.png",
+	 "/images/KWBBallGame.png",
+	 "/images/KWBBallScrimmage.jpg",
+	 "/images/KWBBallLogo.svg",
+	 "/pwa/swKWBBall.min.js",
+	 "/html/KWBBall.html",
+	 "/javascripts/KWBBall.min.js",
+	 "/stylesheets/styleModal.min.css",
+	 "/stylesheets/styleKWBBall.min.css",
+	 "https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js",
+	 "https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js",
+	 "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap",
+	 "https://code.jquery.com/jquery-3.7.1.min.js",	 
+	 "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js",//integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous")
+	 "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+	 "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css", //integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous")
+	 "https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css",
+	 "https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.min.css",
+	 "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
+	 "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+	 "https://cdn.datatables.net/2.1.5/css/dataTables.bootstrap5.min.css",
+	 "https://cdn.datatables.net/2.1.5/js/dataTables.min.js",
+	 "https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.min.js",
+	 "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+	 "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+	 "https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.min.js"
 	]
 	
 postMsg = function(str)
@@ -53,15 +45,22 @@ self.addEventListener("install", event => {
    postMsg('install event listener...');
 	
    event.waitUntil(
-      caches.open(prodCache).then(cache=>
+      caches.open(prodCache).then(async cache=>
 	 {
-	 try
+	 console.log('NUM ASSETS: ' + prodAssets.length);
+	 for (var i = 0; i < prodAssets.length; i++)
 	    {
-	    cache.addAll(prodAssets)
-	    }
-	 catch(error)
-	    {
-	    postMsg(error);
+	    try
+	       {
+	       console.log('TRYING: ' +  prodAssets[i])
+	       await cache.add(prodAssets[i]);
+	     //  cache.addAll(prodAssets)
+	       }
+	    catch(error)
+	       {
+	       console.log(error)
+	       postMsg(error);
+	       }
 	    }
 	 })
       )
@@ -136,6 +135,7 @@ verifyIfCached = function(url)
       
    return('cacheFirst')
    }
+   
 self.addEventListener("fetch", event => 
    {
    postMsg('FETCH: ' + event.request.url)
@@ -145,10 +145,12 @@ self.addEventListener("fetch", event =>
    if (cacheType == 'nocache')
       {
       postMsg('Not cached : ' + event.request.url)
+      const newHeaders = new Headers(event.request.headers);
       return new Response("not cached", 
 	       {
 	       status: 200,
-	       headers: { "Content-Type": "text/plain" },
+	       headers: newHeaders // { "Content-Type": "text/plain"}
+			 // "Cache-Control": "max-age=" + 365 * 24 * 60 * 60 * 1000},
 	       });
       }
    else if (cacheType == 'networkFirst')
@@ -177,10 +179,12 @@ const putInCache = async (request, response) =>
    {
    if (request.method.toUpperCase() == 'POST')
       {
+      const newHeaders = new Headers(request.headers);
       return new Response("not cached", 
 	       {
 	       status: 200,
-	       headers: { "Content-Type": "text/plain" },
+	       headers: newHeaders //{ "Content-Type": "text/plain"}
+			 //  "Cache-Control": "max-age=" + 365 * 24 * 60 * 60 * 1000}
 	       });
       }
    postMsg('Updating local cache with response from network : ' + request.url)

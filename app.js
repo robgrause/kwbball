@@ -58,6 +58,8 @@ app.use('/', (req, res) =>
   {
   if (! req.headers.host.includes(version.client_subdomain()))
     {
+console.log(version.client_subdomain())
+console.log(req.headers.host)
     console.log('REQUEST HOST: ' + req.headers.host)
     console.log('SERVICE HOST: ' + version.client_subdomain())
     var err = new Error('Bad host');
@@ -66,7 +68,10 @@ app.use('/', (req, res) =>
     gpthp.sendMsg(req, res, 'ERROR 502', null)
     }
 })
-app.use('/kwbball', (req, res) => {})
+app.use('/kwbball', (req, res) => 
+    {
+  //  res.setHeader('Cache-Control', 'max-age=' + 365 * 24 * 60 * 60 * 1000); //one year 
+    })
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

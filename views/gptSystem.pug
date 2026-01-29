@@ -33,6 +33,12 @@ block content
 					class="display nowrap table-striped table-bordered table-sm")
 					thead
 					tbody
+	div(id='divSettingsListProperties')
+		div.row.mt-2
+			div.col-md-6
+				div(class="form-group form-floating")
+					input(class="form-control",type="text" id="f_system_namelist_name", placeholder="name")
+					label.labelRequired(id='labelNameList' for="f_system_namelist_name") Name
 	div(id='divSettingsCoaches')
 		div.row.mt-2
 			label.settingstablelabel Coaches
@@ -47,17 +53,17 @@ block content
 			label.settingstablelabel Players
 		div.row.mt-2
 			label.settingstablelabel Find By:
-		div.playertype(id='divPlayerTypeId')
+		div.row.mt-2.playertype(id='divPlayerTypeId')
 			div.playertypedown(id='divPlayerTypeDownId')
 			div.playertypeselect(id='divPlayerTypeSelectId')
 			div.playertypeup(id='divPlayerTypeUpId')
-		div.playertype(id='divPlayerSearchId')
-			div.playersearchfield(class="form-group form-floating")
+		div.row.mt-2.playertype(id='divPlayerSearchId')
+			div.col-mt-6.playersearchfield(class="form-group form-floating")
 				input(class='form-control',type="text", onclick="this.select()" 
 					id='inputPlayerPropertyListId', 
 					list='datalistPlayerPropertyListId', placeholder="")
 				datalist(id='datalistPlayerPropertyListId')
-			div.playerfind(id='divPlayerFindId')
+			div.col-md-2.playerfind(id='divPlayerFindId')
 		div.row
 			div.col-12
 				table.data(id="tblPlayersList",
@@ -225,31 +231,3 @@ block content
 				div(class="form-group form-floating")
 					input(class='form-control',type="text", disabled, id="f_system_date_lastmodified", placeholder="")
 					label(for="f_system_date_lastmodified") Last Modified
-
-	div(id="divSettingsSystem1")
-		div.row
-			div.col-6
-				div(class="form-group form-floating")
-					input.inputGPT-lg(class="form-control",type="number" id="f_systemsettings_client_refreshrate", placeholder="rate" min="10" max="300" value="20")
-					label(for="f_systemsettings_client_refreshrate") Client UI Refresh Rate
-			div.offset-3.col-3
-				div.btn-group.btnGrp
-					button.aGPT(id="btnSystemCleanup", title='save') SYSTEM CLEANUP
-		div.row.mt-2
-			hr.menuhline
-		div.row
-			div.col-6
-				b Internal Use
-		div.row
-			div.col-4
-				div(class="form-group form-floating")
-					input(class='form-control',type="text", disabled, id="f_systemsettings_name", placeholder="")
-					label(for="f_systemsettings_name") Name
-			div.col-4
-				div(class="form-group form-floating")
-					input(class='form-control',type="text", disabled, id="f_systemsettings_date_created", placeholder="")
-					label(for="f_systemsettings_date_created") Date Added
-			div.col-4
-				div(class="form-group form-floating")
-					input(class='form-control',type="text", disabled, id="f_systemsettings_date_lastmodified", placeholder="")
-					label(for="f_systemsettings_date_lastmodified") Last Modified

@@ -150,7 +150,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background:var(--process-wait-symbol);
+  background:black; /*var(--process-wait-symbol);*/
   margin: -4px 0 0 -4px;
 }
 .lds-roller div:nth-child(1) {

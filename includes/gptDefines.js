@@ -99,11 +99,13 @@ var defines =
 		bullpen : 0,
 		scrimmage : 1,
 		game: 2,
+		all: 5,
 		str :
 			{
 			bullpen : 'Bullpen',
 			scrimmage: 'Scrimmage',
 			game : 'Game',
+			all : 'All'
 			}
 		},
 		
@@ -173,7 +175,7 @@ var defines =
 		this.month = '';
 		this.year = '';
 		},
-	
+
 	objSystem:function()
 		{			
 		this.f_name = defines.SYSYEM_SETTINGS_OBJECT;
@@ -216,13 +218,87 @@ var defines =
 		this.f_pitchids = [];
 		this.f_notes = '';
 		},
-		
-	objPitchTypeResults:function()
+
+	objPitchResults:function()
 		{
-		this.f_pitchtype = undefined;
+		this.f_typeid = 0;
 		
-		this.f_actionresults = [];
+		this.f_results = [];
 		},
+
+	initializeSessionResultPitchType:function(id,list,sessiontypeid)
+		{
+		var result = new defines.objPitchResults();
+		result.f_typeid = id;
+			
+		result.f_results = [];
+			
+		var actiontype = new defines.objPitchAction()
+		actiontype.f_id = 0;
+		actiontype.f_name = 'Pitch Count';
+		actiontype.f_pc = 1;
+		actiontype.f_iss = 0;
+		actiontype.f_sc = 0;
+		actiontype.f_c = 0;
+		actiontype.f_pct = 0;
+		actiontype.f_hl = 0;
+		result.f_results.push(actiontype);
+
+		if (sessiontypeid != defines.sessiontype.bullpen)
+			{
+			var actiontype = new defines.objPitchAction()
+			actiontype.f_id = 0;
+			actiontype.f_name = 'Strikes';
+			actiontype.f_pc = 0;
+			actiontype.f_iss = 0;
+			actiontype.f_sc = 1;
+			actiontype.f_c = 0;
+			actiontype.f_pct = 1;
+			actiontype.f_hl = 0;
+			result.f_results.push(actiontype);
+			}
+				
+		var actiontype = new defines.objPitchAction()
+		actiontype.f_id = 0;
+		actiontype.f_name = 'Hit Location';
+		actiontype.f_pc = 0;
+		actiontype.f_iss = 0;
+		actiontype.f_sc = 0;
+		actiontype.f_c = 0;
+		actiontype.f_hl = 1;
+		actiontype.f_pct = 1;
+		result.f_results.push(actiontype);
+			
+		if (sessiontypeid != defines.sessiontype.bullpen)
+			{
+			for(var j = 0; j < list.length; j++)
+				{
+				var actiontype = JSON.parse(JSON.stringify(list[j]));
+
+				actiontype.f_c = 0;
+				actiontype.f_pct = 0;
+				actiontype.f_hl = 0;
+
+				result.f_results.push(actiontype)
+				}
+			}
+		return (result);
+		},
+		
+	initializeSessionResultSummary:function(pitchtypelist,actiontypelist,sessiontypeid)
+		{
+		var pitchresults = [];
+
+		for(var i = 0; i < pitchtypelist.length; i++)
+			{
+			var result = 
+				defines.initializeSessionResultPitchType(pitchtypelist[i].f_id,actiontypelist,sessiontypeid)
+
+			pitchresults.push(result);
+			}
+		return (pitchresults);
+		},
+
 		
 	objSession:function(typeid)
 		{			
@@ -245,7 +321,7 @@ var defines =
 		
 		this.f_notes = '';
 		
-		this.f_pitchtyperesults = []; // array of objPitchTypeResults
+		this.f_results = []; // array of objPitchResults
 		this.f_pitches = []; // array of pitches
 		},
 		
@@ -259,12 +335,12 @@ var defines =
 		
 		this.f_date_created = null;
 
-		this.f_calllocation = '';
-		this.f_throwlocation = '';
-		this.f_velocity = 0;
+		this.f_cl = '';
+		this.f_hl = '';
+		this.f_vel = 0;
 		this.f_inning = 0;
 		
-		this.f_batterleftright = defines.leftright.right;
+		this.f_bstance = defines.leftright.right;
 		
 		this.f_status = defines.status.active;
 
@@ -274,8 +350,6 @@ var defines =
 	objTeam:function()
 		{			
 		this.f_id = 0;
-			
-		this.f_date_created = null;
 	
 		this.f_name = '';
 		},
@@ -283,22 +357,19 @@ var defines =
 	objPitchType:function()
 		{			
 		this.f_id = 0;
-		
-		this.f_date_created = null;
 	
 		this.f_name = '';
 		},
 	objPitchAction:function()
 		{			
 		this.f_id = 0;
-		this.f_isstrike = 0;
-		this.f_strikecount = 0;
-		this.f_pitchcount = 0;
-			
-		this.f_date_created = null;
+		this.f_iss = 0;
+		this.f_sc = 0;
+		this.f_pc = 0;
 	
 		this.f_name = '';
 		},
+
 	status :
 		{
 		inactive : 0,
@@ -329,12 +400,28 @@ var defines =
 			team : 'Team',
 			umpire: 'Umpire',
 			opponent:'Opponent',
-			batter: 'Batter',
+			batter: 'Batter Stance',
 			pitchtype: 'Pitch Type',
 			pitchaction: 'Pitch Action'
 			}
 		},
 	
+	daterange :
+		{
+		week: 0,
+		month : 1,
+		season : 2,
+		career:3,
+		all:4,
+		str :
+			{
+			week : 'Week',
+			month : 'Month',
+			season : 'Season',
+			career: 'Career',
+			all: 'All',
+			}
+		},
 	urlBase64ToUint8Array:function(base64String) 
 		{
         const padding = '='.repeat((4 - base64String.length % 4) % 4);

@@ -1,19 +1,49 @@
 block content
 	div(id='divStats')
 		div.row.mt-2
-			div.col-6.text-start
-				label STATS
-		div.row.mt-1
+			div.col-md-6.text-start
+				labe STATS
+		div.row.mt-2
+			div.col-md-6.text-end
+				button.aGPT(id="btnStatFind", title='find') FIND
+		div.row.mt-2
 			div.col-md-6
 				div.statsearch(id='divStatSearchId')
 					div.statsearchdown(id='divStatSearchDownId')
 					div.statsearchselect(id='divStatSearchSelectId')
 					div.statsearchup(id='divStatSearchUpId')
-			div.col-sm-4
+		div.row.mt-2.hide(id='divStatSearchPrimaryValue')
+			div.col-md-6
 				div(class="form-group form-floating")
-					input(class='form-control text-capitalize',type="text", onclick="this.select()" id="f_statsearch_value", list = "list_StatSearch_Value", placeholder="value")
-					label.labelText(class='form-label' for="f_statsearch_value") Value
-					datalist(id="list_StatSearch_Value")
-			div.col-sm-2
-				div.statsearchfind(id='divStatSearchFindId')
+					select(class='form-select',id="f_statsearch_primary_value" placeholder="")
+					label.labelRequired(id='labelStatSearchPrimaryValueId' class="form-label" for="f_statsearch_primary_value") Value
+		div.row.mt-2.hide(id='divStatSearchSecondarySelect')
+			div.col-md-6
+				div(class="form-group form-floating")
+					select(class='form-select',id="f_statsearch_secondary_select" placeholder="")
+					label(id='labelStatSearchSecondarySelectId' class="form-label" for="f_statsearch_secondary_select") Secondary
+		div.row.mt-2.hide(id='divStatSearchSecondaryValue')
+			div.col-md-6
+				div(class="form-group form-floating")
+					select(class='form-select',id="f_statsearch_secondary_value" placeholder="")
+					label(id='labelStatSearchSecondaryValueId' class="form-label" for="f_statsearch_secondary_value") Secondary Value
 		div.row.mt-2
+			div.col-md-6
+				div(class="form-group form-floating")
+					select(class='form-select',id="f_statsearch_sessiontype" placeholder="")
+					label.labelRequired(class="form-label" for="f_statsearch_sessiontype") Session Type
+		div.row.mt-2
+			div.col-md-6
+				div(class="form-group form-floating")
+					select(class='form-select',id="f_statsearch_daterange" placeholder="")
+					label(class="form-label" for="f_statsearch_daterange") Dates
+	div(id='divStatsResults')
+		div.row.mt-2
+			div.col-6.text-start
+				label.labelText(id='labelResultsHeader') STATS
+		div.row.mt-2
+			div.col-12(id='divStatResultsParentId')
+	div(id='divStatNoResultsMsg')
+		div.row.mt-4
+			div.col-12
+				label.labelCenter No Results Found

@@ -308,6 +308,7 @@ var gptcomm =
 			var reject = false;
 			for (var i in sessionlist)
 				{
+				delete sessionlist[i].f_key;
 				gptcomm.processServerApi('sessionupload', sessionlist[i], function(obj,apiCmd)
 					{
 					//error occurred - requeue
@@ -319,7 +320,7 @@ var gptcomm =
 					else
 						{
 						console.log('DELETING: upload request...')
-						gptindb.deleteFromDB(gptindb.dbobj_sessionsubmitted,obj.f_id)
+						gptindb.deleteFromDB(gptindb.dbobj_sessionsubmitted,sessionlist[i].f_id)
 						}
 					});
 				}

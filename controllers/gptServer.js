@@ -220,6 +220,7 @@ exports.gpt_startup = function (req, res)
 		});
 
 };
+
 /*********************************************************************************
 	Routes - File API 
 
@@ -638,7 +639,6 @@ exports.gpt_user_delete = function (req, res)
 	var data = req.body;
 	var creds = data.credentials;
 	var obj = data.data;
-
 	if (gpthp.isProtectedFromDelete(obj.f_fname,obj.f_lname) != undefined)
 		{
 		var msg = 'USER: ' + obj.f_fname + ' ' + obj.f_lname + ' can not be deleted';
@@ -779,6 +779,33 @@ exports.gpt_team_getall = function (req, res) {
 		});
 };
 
+exports.gpt_team_update = function (req, res) {
+	var data = req.body;
+	var creds = data.credentials;
+	var obj = data.data;
+		
+	writeDebug ("DEBUG:team updating item");
+
+	gptdb.sqlTeam.getByName(creds,obj.f_name,function(err,rows)
+		{
+		if ( (rows == undefined) || (rows.length <= 0) )
+			{
+			gptdb.sqlTeam.add(creds,obj,function(err, obj)
+				{
+				sendMsg (req, res, err, obj);
+				});
+			}
+		else
+			{
+			obj.f_id = rows[0].f_id;
+			
+			gptdb.sqlTeam.update(creds,obj.f_id,obj,function(err, obj)
+				{
+				sendMsg (req, res, err, obj);
+				});	
+			}
+		});
+};
 exports.gpt_pitchtype_getall = function (req, res) {
 	var data = req.body;
 	var creds = data.credentials;
@@ -791,6 +818,32 @@ exports.gpt_pitchtype_getall = function (req, res) {
 		});
 };
 
+exports.gpt_pitchtype_update = function (req, res) {
+	var data = req.body;
+	var creds = data.credentials;
+	var obj = data.data;
+	
+	writeDebug ("DEBUG:pitchtype updating item");
+	gptdb.sqlPitchType.getByName(creds,obj.f_name,function(err,rows)
+		{
+		if ( (rows == undefined) || (rows.length <= 0) )
+			{
+			gptdb.sqlPitchType.add(creds,obj,function(err, obj)
+				{
+				sendMsg (req, res, err, obj);
+				});
+			}
+		else
+			{
+			obj.f_id = rows[0].f_id;
+			
+			gptdb.sqlPitchType.update(creds,obj.f_id,obj,function(err, obj)
+				{
+				sendMsg (req, res, err, obj);
+				});	
+			}
+		});
+};
 exports.gpt_pitchaction_getall = function (req, res) {
 	var data = req.body;
 	var creds = data.credentials;
@@ -803,19 +856,41 @@ exports.gpt_pitchaction_getall = function (req, res) {
 		});
 };
 
-
+exports.gpt_pitchaction_update = function (req, res) {
+	var data = req.body;
+	var creds = data.credentials;
+	var obj = data.data;
+	
+	writeDebug ("DEBUG:pitchaction update item");
+	gptdb.sqlPitchAction.getByName(creds,obj.f_name,function(err,rows)
+		{
+		if ( (rows == undefined) || (rows.length <= 0) )
+			{
+			gptdb.sqlPitchAction.add(creds,obj,function(err, obj)
+				{
+				sendMsg (req, res, err, obj);
+				});
+			}
+		else
+			{
+			obj.f_id = rows[0].f_id;
+			
+			gptdb.sqlPitchAction.update(creds,obj.f_id,obj,function(err, obj)
+				{
+				sendMsg (req, res, err, obj);
+				});	
+			}
+		});
+};
 exports.gpt_session_upload = function (req, res) {
 	var data = req.body;
 	var creds = data.credentials;
 	var obj = data.data;
 	
 	writeDebug ("DEBUG:Session upload...");
-	
 	var pitches = obj.f_pitches;
 	obj.f_pitches = [];
 	delete obj.f_pitches;
-	
-	obj.f_pitchtyperesults = JSON.stringify(obj.f_pitchtyperesults);
 
 	gptdb.sqlSession.add(creds,obj,function(err,session)
 		{
@@ -833,4 +908,167 @@ exports.gpt_session_upload = function (req, res) {
 			}
 		sendMsg (req, res, err, session);
 		});
+};	
+
+exports.gpt_stat_search = function (req, res) {
+	var data = req.body;
+	var creds = data.credentials;
+	var search = data.data;
+
+	if (search.primarysearchtypeid == defines.searchtype.player)
+		{
+		writeDebug ("DEBUG:Stat search by player...");
+
+		if (search.secondarysearchtypeid == defines.searchtype.batter)
+			{
+			writeDebug ("DEBUG:Stat search by batter stance...");
+			gptdb.sqlSession.getAllByPlayer(creds,search.primaryvalue,search.sessiontypeid,
+										search.daterange,function(err,sessions)
+				{
+				var controls = new gptdb.sqlList.asyncControls(creds,sessions,5,
+										gptdb.sqlSession.callbackListNodeSecondarySearch)
+				controls.search = search;
+
+				gptdb.sqlList.processList(controls, function(err,results)
+					{
+					sendMsg (req, res, err, results);
+					});
+				});
+			}
+		else if (search.secondarysearchtypeid == defines.searchtype.pitchtype)
+			{
+			writeDebug ("DEBUG:Stat search by pitch type...");
+			gptdb.sqlSession.getAllByPlayer(creds,search.primaryvalue,search.sessiontypeid,
+										search.daterange,function(err,sessions)
+				{
+				var controls = new gptdb.sqlList.asyncControls(creds,sessions,5,
+										gptdb.sqlSession.callbackListNodeSecondarySearch)
+				controls.search = search;
+
+				gptdb.sqlList.processList(controls, function(err,results)
+					{
+					sendMsg (req, res, err, results);
+					});
+				});
+			}			
+		else if (search.secondarysearchtypeid == defines.searchtype.pitchaction)
+			{
+			writeDebug ("DEBUG:Stat search by pitch action...");
+			gptdb.sqlSession.getAllByPlayer(creds,search.primaryvalue,search.sessiontypeid,
+										search.daterange,function(err,sessions)
+				{
+				var controls = new gptdb.sqlList.asyncControls(creds,sessions,5,
+										gptdb.sqlSession.callbackListNodeSecondarySearch)
+				controls.search = search;
+
+				gptdb.sqlList.processList(controls, function(err,results)
+					{
+					sendMsg (req, res, err, results);
+					});
+				});
+			}
+		else
+			{
+			writeDebug ("DEBUG:Stat search summary...");
+			gptdb.sqlSession.getAllByPlayer(creds,search.primaryvalue,search.sessiontypeid,search.daterange,function(err,sessions)
+				{
+				var controls = new gptdb.sqlList.asyncControls(creds,sessions,5,
+										gptdb.sqlSession.callbackListNodeCreateSummary)
+				controls.search = search;
+
+				gptdb.sqlList.processList(controls, function(err,results)
+					{
+					sendMsg (req, res, err, results);
+					});
+				});
+			}
+		}	
+	else if (search.primarysearchtypeid == defines.searchtype.classyear)
+		{
+		writeDebug ("DEBUG:Stat search by class year...");
+		gptdb.sqlUser.getAllByClassYear(creds,search.primaryvalue,function(err,players)
+			{
+			var controls = new gptdb.sqlList.asyncControls(creds,players,5,
+										gptdb.sqlSession.callbackListNodeGetAllByPlayer)
+			controls.search = search;
+			
+			gptdb.sqlList.processList(controls, function(err,sessions)
+				{
+				var flatlist = [];
+				for (var i = 0; i < sessions.length; i++)
+					for (var j = 0; j < sessions[i].length; j++)
+						flatlist.push(sessions[i][j]);
+		
+				var controls = new gptdb.sqlList.asyncControls(creds,flatlist,5,
+										gptdb.sqlSession.callbackListNodeCreateSummary)
+				controls.search = search;
+
+				gptdb.sqlList.processList(controls, function(err,results)
+					{
+					sendMsg (req, res, err, results);
+					});
+				});
+			});
+		}	
+	else if	(search.primarysearchtypeid == defines.searchtype.team)
+		{
+		writeDebug ("DEBUG:Stat search by team...");
+		gptdb.sqlUser.getAllByTeam(creds,search.primaryvalue,function(err,players)
+			{
+			var controls = new gptdb.sqlList.asyncControls(creds,players,5,
+										gptdb.sqlSession.callbackListNodeGetAllByPlayer)
+			controls.search = search;
+			
+			gptdb.sqlList.processList(controls, function(err,sessions)
+				{
+				var flatlist = [];
+				for (var i = 0; i < sessions.length; i++)
+					for (var j = 0; j < sessions[i].length; j++)
+						flatlist.push(sessions[i][j]);
+						
+				var controls = new gptdb.sqlList.asyncControls(creds,flatlist,5,
+										gptdb.sqlSession.callbackListNodeCreateSummary)
+				controls.search = search;
+
+				gptdb.sqlList.processList(controls, function(err,results)
+					{
+					sendMsg (req, res, err, results);
+					});
+				});
+			});
+		}
+	else if (search.primarysearchtypeid == defines.searchtype.umpire)
+		{
+		writeDebug ("DEBUG:Stat search by umpire...");
+			
+		gptdb.sqlSession.getAllByUmpire(creds,search.primaryvalue,search.sessiontypeid,search.daterange,function(err,sessions)
+			{
+			var controls = new gptdb.sqlList.asyncControls(creds,sessions,5,
+										gptdb.sqlSession.callbackListNodeCreateSummary)
+			controls.search = search;
+
+			gptdb.sqlList.processList(controls, function(err,results)
+				{
+				sendMsg (req, res, err, results);
+				});
+			});
+		}	
+	else if	(search.primarysearchtypeid == defines.searchtype.opponent)
+		{
+		writeDebug ("DEBUG:Stat search by opponent...");
+			
+		gptdb.sqlSession.getAllByOpponent(creds,search.primaryvalue,search.sessiontypeid,search.daterange,function(err,sessions)
+			{
+			var controls = new gptdb.sqlList.asyncControls(creds,sessions,5,
+										gptdb.sqlSession.callbackListNodeCreateSummary)
+			controls.search = search;
+
+			gptdb.sqlList.processList(controls, function(err,results)
+				{
+
+				sendMsg (req, res, err, results);
+				});
+			});
+		}
+
 };

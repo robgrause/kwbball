@@ -182,11 +182,18 @@ var kwbball =
 		
 		cmdA.appendChild(cmdI)
 		cmdA.appendChild(cmdB)
-		
 		cmdDiv.appendChild(cmdA)
-		
+				
 		var parentElem = document.getElementById (parentid)
 		parentElem.appendChild(cmdDiv);
+		
+		if (cmddata.cmdid == 'cmdStats')
+			{
+			gptut.setDisabledState(cmdI.id,!navigator.onLine)
+			gptut.setDisabledState(cmdB.id,!navigator.onLine)
+			gptut.setDisabledState(cmdA.id,!navigator.onLine)
+			gptut.setDisabledState(cmdDiv.id,!navigator.onLine)
+			}
 		},
 		
 	buildBottomMenu:function(menutype)
@@ -211,10 +218,15 @@ var kwbball =
 			//cmds.push({'label':'SESSIONS','menupos':'cmd2','cmdid':'cmdSessions','icon':['bi','bi-bullseye']});
 			cmds.push({'label':'STATS','menupos':'cmd2','cmdid':'cmdStats','icon':['bi','bi-clipboard-data']});
 			}
+				
+		gptut.deleteElementChildren('idMainBottomMenu')
 		
 		for (var i = 0; i < cmds.length; i++)
 			kwbball.createCommand(cmds[i],'idMainBottomMenu');
+			
+		gptut.setShowState('idMainBottomMenu', true);
 		},
+		
 	loadConfig:async function (credentials)
 		{
 		gptmain.setStatusLabel('');

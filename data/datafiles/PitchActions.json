@@ -2,38 +2,38 @@
 "actions" :[
 			{
 			"f_name" : "Called Ball",
-			"f_isstrike": 0,
-			"f_strikecount" : 0,
-			"f_pitchcount":0,
-			"f_date_created" : null
+			"f_iss": 0,
+			"f_sc" : 0,
+			"f_pc": 0,
+			"f_id": 1
 			},
 			{
 			"f_name" : "Called Strike",
-			"f_isstrike": 1,
-			"f_strikecount" : 0,
-			"f_pitchcount":0,
-			"f_date_created" : null
+			"f_iss": 1,
+			"f_sc" : 0,
+			"f_pc": 0,
+			"f_id": 2
 			},
 			{
 			"f_name" : "Swing & Miss",
-			"f_isstrike": 1,
-			"f_strikecount" : 0,
-			"f_pitchcount":0,
-			"f_date_created" : null
+			"f_iss": 1,
+			"f_sc" : 0,
+			"f_pc": 0,
+			"f_id": 3
 			},
 			{
 			"f_name" : "Foul",
-			"f_isstrike": 1,
-			"f_strikecount" : 0,
-			"f_pitchcount":0,
-			"f_date_created" : null
+			"f_iss": 1,
+			"f_sc" : 0,
+			"f_pc": 0,
+			"f_id": 4
 			},
 			{
 			"f_name" : "In Play",
-			"f_isstrike": 1,
-			"f_strikecount" : 0,
-			"f_pitchcount":0,
-			"f_date_created" : null
+			"f_iss": 1,
+			"f_sc" : 0,
+			"f_pc": 0,
+			"f_id": 5
 			}
 		]
 }

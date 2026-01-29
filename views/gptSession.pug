@@ -1,16 +1,17 @@
 block content
 	div(id='divSessionNew')
 		div.row.mt-2
-			div.col-6.text-start
+			div.col-md-6.text-start
 				label(id='labelSessionType') SESSION
-			div.col-6.text-end
+		div.row.mt-2
+			div.col-md-6.text-end
 				button.aGPT(id="btnSessionStart", title='new') START SESSION
 		div.row.mt-2
 			div.col-md-6
 				div(class="form-group form-floating")
 					select(class='form-select',id="f_session_playerid" placeholder="")
 					label.labelRequired(class="form-label" for="f_session_playerid") Player
-		div.row.mt-4
+		div.row.mt-2
 			div.col-md-6
 				div(class="form-group form-floating")
 					input(class='form-control' type="datetime-local" id="f_session_date", placeholder="")
@@ -25,6 +26,7 @@ block content
 							input(class='form-control text-capitalize',type="text", onclick="this.select()" id="f_session_opponent", list = "list_Opponent", placeholder="opponent")
 							label.labelText(class='form-label' for="f_session_opponent") Opponent
 							datalist(id="list_Opponent")
+				div.row.mt-2
 					div.col-md-6
 						div(class="form-group form-floating")
 							input(class='form-control text-capitalize',type="text", onclick="this.select()" id="f_session_umpire", list = "list_Umpire", placeholder="umpire")
@@ -53,7 +55,7 @@ block content
 						tbody
 						tfoot
 							tr(id='tableFooterRow')
-								th Total:
+								td Total:
 		div.pitchviewcontrols(id='divPitchViewId')
 			div.pitchtype(id='divPitchTypeId')
 				div.pitchtypedown(id='divPitchTypeDownId')

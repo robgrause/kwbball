@@ -12,17 +12,6 @@ const gptma = require ('../includes/gptMath');
 **********************************************************************************/
 var sqlUtils = {
 
-	objAsyncControls:function(creds,list,processNodeFunc)
-		{
-		this.processNodeFunc = processNodeFunc;
-		this.processList = list;
-		this.iMaxNumThreads = 5;
-		this.iNumRunning = 0;
-		this.getfull = false;
-		this.processResults = [];
-		this.creds = creds;
-		},
-
 /*--------------------------------------------------------------------------------
 	gptdb.sqlUtils.getValueList("t_devicecfgs", "f_manufacturer_name",function (err,rows)
 		{
@@ -38,14 +27,14 @@ var sqlUtils = {
 		return db.execute (creds,sql, callback);
 		},
 	
-	getDateRangeSQL:function(params)
+	getDateRangeSQL:function(dateRange,dateField,tblName)
 		{
-	
+/*
 		var dateField = params.dateField;
 		var dateRange = params.dateRange;
 		var dateValue = params.dateValue;
 		var tblName   = params.tblName;
-		
+*/		
 		var sql = '';
 		// get today in iso time
 		var dateNow = gptdt.getISODateTime();
@@ -53,93 +42,21 @@ var sqlUtils = {
 
 		if ( (dateRange == undefined) || (dateRange.length <= 0) )
 			sql = null;
-		else if (dateRange == 'monday_week')
+		
+		if (dateRange == defines.daterange.week)
 			{
-			var tmpdate = new Date(dateValue);
-			tmpdate.setDate(tmpdate.getDate() + 1);
-			
-			var wkdays = gptdt.getWeekdays(tmpdate)
-			var monday = wkdays[0].f_date_record;
-			var sunday = wkdays[6].f_date_record;
-
-			sql = tblName + "." + dateField + 
-							" BETWEEN '" + gptdt.getISOSearchDateTime(monday) + "'" +
-							" AND '" + gptdt.getISOSearchDateTime(sunday) + "'";
-			}
-		else if (dateRange == 'l1days')
-			{
-			var day = dateNow.getDate();
-			var month = dateNow.getMonth();
-			var year = dateNow.getFullYear();
-			var newdate = new Date(year,month,day);
-
-			sql = tblName + "." + dateField + " >= '" + gptdt.getISOSearchDateTime(newdate) + "'";
-			}
-		else if (dateRange == 'curweek')
-			{
-			var wkdays = gptdt.getWeekdays(dateNow)
-			var monday = wkdays[0].f_date_record;
-			var sunday = wkdays[6].f_date_record;
-			sql = tblName + "." + dateField + 
-							" BETWEEN '" + gptdt.getISOSearchDateTime(monday) + "'" +
-							" AND '" + gptdt.getISOSearchDateTime(sunday) + "'";
-			}
-		else if (dateRange == 'lastweek')
-			{
-			dateNow.setDate(dateNow.getDate() - 7);
-
-			var wkdays = gptdt.getWeekdays(dateNow);
-
-			var monday = wkdays[0].f_date_record;
-			var sunday = wkdays[6].f_date_record;
-
-			sql = tblName + "." + dateField + 
-							" BETWEEN '" + gptdt.getISOSearchDateTime(monday) + "'" +
-							" AND '" + gptdt.getISOSearchDateTime(sunday) + "'";
-			}
-		else if (dateRange == 'l7days')
 			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
-		else if (dateRange == 'l30days')
+			}
+		else if (dateRange == defines.daterange.month)
+			{
 			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
-		else if (dateRange == 'l60days')
-			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 60 DAY)";
-		else if (dateRange == 'l90days')
-			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 90 DAY)";
-		else if (dateRange == 'l180days')
-			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 180 DAY)";
-		else if (dateRange == 'l240days')
-			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 240 DAY)";
-		else if (dateRange == 'l365days')
-			sql = tblName + "." + dateField + " >= DATE_SUB(NOW(), INTERVAL 365 DAY)";
-		else if (dateRange == 'g12hours')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 12 HOUR)";
-		else if (dateRange == 'g1days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 1 DAY)";
-		else if (dateRange == 'g7days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 7 DAY)";
-		else if (dateRange == 'g30days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 30 DAY)";
-		else if (dateRange == 'g60days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 60 DAY)";
-		else if (dateRange == 'g90days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 90 DAY)";
-		else if (dateRange == 'g180days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 180 DAY)";
-		else if (dateRange == 'g365days')
-			sql = tblName + "." + dateField + " <= DATE_SUB(NOW(), INTERVAL 365 DAY)";
-		else if (dateRange == 'ytd')
+			}
+		else if (dateRange == defines.daterange.season)
 			{
 			var strBeginDay = dateNow.getFullYear() + '-01-01' 
 			sql = tblName + "." + dateField + " >= '" + strBeginDay + "'";
 			}
-		else if (dateRange == 'lastyear')
-			{
-			var strBeginDay = (dateNow.getFullYear() - 1) + '-01-01';
-			var strEndDay = dateNow.getFullYear() + '-01-01' 
-			sql = tblName + "." + dateField +
-					" BETWEEN ' " + strBeginDay + "' AND '" + strEndDay + "'";
-			}
-		else if (dateRange == 'all')
+		else if (dateRange == defines.daterange.all)
 			sql = null;
 			
 		return (sql);
@@ -732,10 +649,33 @@ var sqlUser = {
 			return;
 			});		
 	},
-	delete:function(creds,id, callback) {
-		var sql = "DELETE FROM " + this.tblName + " WHERE f_id=?";
-		return db.execute(creds,sql,[id],callback);
+	delete:function(creds,id, callback) 
+		{
+		sqlSession.getAllByPlayer(creds,id,defines.sessiontype.all,defines.daterange.all,
+																	function(err,sessions) 
+			{
+			var controls = new sqlList.asyncControls(creds,sessions,5,
+								sqlUser.callbackListNodeDeleteAllSessions)
+
+			sqlList.processList(controls, function(err,results)
+				{
+				var sql = "DELETE FROM " + sqlUser.tblName + " WHERE f_id=?";
+				return db.execute(creds,sql,[id],function(err,results)
+					{
+					callback('',results);
+					});
+				});
+			});
 	},
+	
+	callbackListNodeDeleteAllSessions:function (session,controls,callback) 
+		{
+		sqlSession.delete(controls.creds,session.f_id,function(err,results)
+			{
+			});
+			
+		callback('',session);
+		},
 };
 
 /*********************************************************************************
@@ -777,7 +717,6 @@ var sqlTeam = {
 	},
 	
 	add:function(creds,obj,callback) {
-		obj.f_date_created = gptdt.getISODateTime();
 	
 		var sql = "INSERT INTO " + this.tblName + " SET ?";
 		
@@ -795,8 +734,6 @@ var sqlTeam = {
 		return db.execute(creds,sql,[id],callback);
 	},
 };
-
-
 
 /*********************************************************************************
 	PitchType database functions
@@ -837,7 +774,6 @@ var sqlPitchType = {
 	},
 	
 	add:function(creds,obj,callback) {
-		obj.f_date_created = gptdt.getISODateTime();
 	
 		var sql = "INSERT INTO " + this.tblName + " SET ?";
 		
@@ -856,7 +792,6 @@ var sqlPitchType = {
 	},
 };
 
-
 /*********************************************************************************
 	PitchAction database functions
 
@@ -873,12 +808,12 @@ var sqlPitchAction = {
 	},
 	update:function(creds,id,obj,callback) 
 		{	
-		var sql = "UPDATE " + this.tblName + " SET f_name=?,f_isstrike=?,f_strikecount=?,f_pitchccount=?" +
+		var sql = "UPDATE " + this.tblName + " SET f_name=?,f_iss=?,f_sc=?,f_pitchccount=?" +
 						" WHERE f_id=?";
 		db.execute(creds,sql,[obj.f_name,
-								obj.f_isstrike,
-								obj.f_strikecount,
-								obj.f_pitchcount,
+								obj.f_iss,
+								obj.f_sc,
+								obj.f_pc,
 								id],function(err,rows)
 			{
 			callback(err,obj);
@@ -901,7 +836,6 @@ var sqlPitchAction = {
 	},
 	
 	add:function(creds,obj,callback) {
-		obj.f_date_created = gptdt.getISODateTime();
 	
 		var sql = "INSERT INTO " + this.tblName + " SET ?";
 		
@@ -919,9 +853,6 @@ var sqlPitchAction = {
 		return db.execute(creds,sql,[id],callback);
 	},
 };
-
-
-
 
 /*********************************************************************************
 	Session database functions
@@ -940,39 +871,164 @@ var sqlSession = {
 			if ( (rows) && (rows.length > 0) )
 				{
 				for (var i = 0; i < rows.length; i++)
-					rows[i].f_pitchtyperesults = JSON.parse(rows[i].f_pitchtyperesults);
+					rows[i].f_results = JSON.parse(rows[i].f_results);
 				}
 			callback(err, rows)
 			});
 	},
 	
-	getAllByUmpire:function (creds,umpire,callback) {
-		var sql = "SELECT * FROM " + this.tblName + 
-									" WHERE f_umpire=?" +
-									" ORDER BY " + 'f_id' + " " + 'ASC';				
-		db.execute (creds,sql,[umpire],function(err,rows)
+	getAllByUmpire:function (creds,umpire,typeid,date,callback) 
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_startdateandtime',this.tblName);
+		if (typeid == defines.sessiontype.all)
 			{
-			if ( (rows) && (rows.length > 0) )
+			var whereSQL = " WHERE f_umpire=?";
+			
+			if (dateSQL != null)
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+			else
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+
+			db.execute (creds,sql,[umpire],function(err,rows)
 				{
-				for (var i = 0; i < rows.length; i++)
-					rows[i].f_pitchtyperesults = JSON.parse(rows[i].f_pitchtyperesults);
-				}
-			callback(err, rows)
-			});
+				if ( (rows) && (rows.length > 0) )
+					{
+					for (var i = 0; i < rows.length; i++)
+						rows[i].f_results = JSON.parse(rows[i].f_results);
+					}
+				callback(err, rows)
+				});
+			}
+		else
+			{
+			var whereSQL = " WHERE f_umpire=? AND f_typeid=?";
+
+			if (dateSQL != null)
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+			else
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';			
+
+			db.execute (creds,sql,[umpire,typeid],function(err,rows)
+				{
+				if ( (rows) && (rows.length > 0) )
+					{
+					for (var i = 0; i < rows.length; i++)
+						rows[i].f_results = JSON.parse(rows[i].f_results);
+					}
+				callback(err, rows)
+				});
+			}
 	},
-	getAllByOpponent:function (creds,opponent,callback) {
-		var sql = "SELECT * FROM " + this.tblName + 
-									" WHERE f_opponent=?" +
-									" ORDER BY " + 'f_id' + " " + 'ASC';				
-		db.execute (creds,sql,[opponent],function(err,rows)
+	getAllByOpponent:function (creds,opponent,typeid,date,callback)
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_startdateandtime',this.tblName);
+
+		if (typeid == defines.sessiontype.all)
 			{
-			if ( (rows) && (rows.length > 0) )
+			var whereSQL = " WHERE f_opponent=?";
+			
+			if (dateSQL != null)
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+			else
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+									
+			db.execute (creds,sql,[opponent],function(err,rows)
 				{
-				for (var i = 0; i < rows.length; i++)
-					rows[i].f_pitchtyperesults = JSON.parse(rows[i].f_pitchtyperesults);
-				}
-			callback(err, rows)
-			});
+				if ( (rows) && (rows.length > 0) )
+					{
+					for (var i = 0; i < rows.length; i++)
+						rows[i].f_results = JSON.parse(rows[i].f_results);
+					}
+				callback(err, rows)
+				});
+			}
+		else
+			{
+			var whereSQL = " WHERE f_opponent=? AND f_typeid=?";
+
+			if (dateSQL != null)
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+			else
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';			
+
+			db.execute (creds,sql,[opponent,typeid],function(err,rows)
+				{
+				if ( (rows) && (rows.length > 0) )
+					{
+					for (var i = 0; i < rows.length; i++)
+						rows[i].f_results = JSON.parse(rows[i].f_results);
+					}
+				callback(err, rows)
+				});
+			}
+	},
+	
+	getAllByPlayer:function (creds,playerid,typeid,date,callback) 
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_startdateandtime',this.tblName);
+		
+		if (typeid == defines.sessiontype.all)
+			{
+			var whereSQL = " WHERE f_playerid=?";
+
+			if (dateSQL != null)
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+			else
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+
+			db.execute (creds,sql,[playerid],function(err,rows)
+				{
+				if ( (rows) && (rows.length > 0) )
+					{
+					for (var i = 0; i < rows.length; i++)
+						rows[i].f_results = JSON.parse(rows[i].f_results);
+					}
+				callback(err, rows)
+				});
+			}
+		else
+			{
+			var whereSQL = " WHERE f_playerid=? AND f_typeid=?";
+
+			if (dateSQL != null)
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+			else
+				var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';		
+				
+			db.execute (creds,sql,[playerid,typeid],function(err,rows)
+				{
+				if ( (rows) && (rows.length > 0) )
+					{
+					for (var i = 0; i < rows.length; i++)
+						rows[i].f_results = JSON.parse(rows[i].f_results);
+					}
+				callback(err, rows)
+				});
+			}
 	},
 	
 	getById:function (creds,id, callback) {
@@ -982,7 +1038,7 @@ var sqlSession = {
 			if ( (rows) && (rows.length > 0) )
 				{
 				for (var i = 0; i < rows.length; i++)
-					rows[i].f_pitchtyperesults = JSON.parse(rows[i].f_pitchtyperesults);
+					rows[i].f_results = JSON.parse(rows[i].f_results);
 				}
 		
 			callback(err, rows)
@@ -991,12 +1047,12 @@ var sqlSession = {
 	
 	add:function(creds,obj,callback) {
 		obj.f_date_created = gptdt.getISODateTime();
-		obj.f_date_lastmodified = gptdt.getISODateTime();
 		
-		obj.f_pitchtyperesults = JSON.stringify(obj.f_pitchtyperesults);
+		obj.f_results = JSON.stringify(obj.f_results);
+
 		var pitches = obj.f_pitches;
 		delete obj.f_pitches;
-		
+
 		var sql = "INSERT INTO " + this.tblName + " SET ?";
 		
 		db.execute (creds,sql,obj, function (err,count)
@@ -1004,23 +1060,313 @@ var sqlSession = {
 			if (count != undefined)
 				obj.f_id = count.insertId;
 
-			obj.f_pitchtyperesults = JSON.parse(obj.f_pitchtyperesults);
+			obj.f_results = JSON.parse(obj.f_results);
 			obj.f_pitches = pitches;
 			
 			callback(err,obj)
 			return;
 			});		
 	},
-	delete:function(creds,id, callback) {
-		var sql = "DELETE FROM " + this.tblName + " WHERE f_id=?";
-		return db.execute(creds,sql,[id],callback);
-	},
+	delete:function(creds,id, callback) 
+		{
+		sqlPitch.getAllBySession(creds,id,function(err,pitches) 
+			{
+			var controls = new sqlList.asyncControls(creds,pitches,5,
+								sqlSession.callbackListNodeDeleteAllPitches)
+
+			sqlList.processList(controls, function(err,results)
+				{
+				var sql = "DELETE FROM " + sqlSession.tblName + " WHERE f_id=?";
+				return db.execute(creds,sql,[id],callback);
+				});
+			});
+		},
+
+	calculateTotals:function (pitchtype) 
+		{
+		if (pitchtype == undefined)
+			return (pitchtype);
+			
+		var hlIndex = -1;
+		var scIndex = -1;
+		var pcIndex = -1;
+		for (var j = 0; j < pitchtype.f_results.length; j++)
+			{
+			if (pitchtype.f_results[j].f_pc != 0)
+				pcIndex = j;
+			else if (pitchtype.f_results[j].f_sc != 0)
+				scIndex = j;
+			else if (pitchtype.f_results[j].f_hl != 0)
+				hlIndex = j;
+			}
+
+		if (scIndex >= 0)
+			{
+			if (pitchtype.f_results[pcIndex].f_c <= 0)
+				var percent = 0;
+			else
+				var percent = (pitchtype.f_results[scIndex].f_c / pitchtype.f_results[pcIndex].f_c) * 100;
+		
+			percent = gptma.mathRoundup(percent,0);
+			pitchtype.f_results[scIndex].f_c = pitchtype.f_results[scIndex].f_c + ' (' + percent +  '%)';
+			}
+				
+		if (hlIndex >= 0)
+			{
+			if (pitchtype.f_results[pcIndex].f_c <= 0)
+				var percent = 0;
+			else
+				var percent = (pitchtype.f_results[hlIndex].f_c / pitchtype.f_results[pcIndex].f_c) * 100;
+		
+			percent = gptma.mathRoundup(percent,0);
+			pitchtype.f_results[hlIndex].f_c = pitchtype.f_results[hlIndex].f_c + ' (' + percent +  '%)';
+			}
+			
+		return(pitchtype);
+		},
+			
+	callbackListNodeGetAllByPlayer:function (node,controls,callback) 
+		{
+		var typeid = controls.search.sessiontypeid;
+		var playerid = node.f_id;
+		var daterange = controls.search.daterange;
+		var creds = controls.creds;
+		sqlSession.getAllByPlayer(creds,playerid,typeid,daterange,function(err,results)
+			{
+			callback(err,node);
+			});
+		},
+		
+	callbackListNodeDeleteAllPitches:function (pitch,controls,callback) 
+		{
+		var err = '';
+		var creds = controls.creds;
+		sqlPitch.delete(creds,pitch.f_id,function(err,results)
+			{
+			});
+		callback(err,pitch);
+		},
+		
+	callbackListNodeCreateSummary:function (session,controls,callback) 
+		{
+		var err = '';
+		
+		if ( (session.f_results == undefined) || (session.f_results.length <= 0) )
+			{
+			callback(err,session);
+			return;
+			}
+			
+		var summary = JSON.parse(JSON.stringify(session.f_results[0]));
+		summary.f_name = 'Summary';
+		summary.f_typeid = 0;
+		for (var j = 0; j < summary.f_results.length; j++)
+			summary.f_results[j].f_c = 0;
+		
+		for (var i = 0; i < session.f_results.length; i++)
+			{
+			var pitchtype = session.f_results[i];
+
+			for (var j = 0; j < pitchtype.f_results.length; j++)
+				{
+				var result = pitchtype.f_results[j];
+				var summaryresult = summary.f_results[j];
+
+				summaryresult.f_c = summaryresult.f_c + result.f_c;
+				}
+			}
+
+		var pitchtyperesults = session.f_results;
+		session.f_results = [];
+		
+		session.f_results.push(summary);
+		for (var i = 0; i < pitchtyperesults.length; i++)
+			session.f_results.push(pitchtyperesults[i]);
+			
+		for (var j = 0; j < session.f_results.length; j++)
+			session.f_results[j] = sqlSession.calculateTotals(session.f_results[j]); 
+			
+		callback(err,session);
+		},
+		
+	callbackListNodeSecondarySearch:function (session,controls,callback) 
+		{
+		var search = controls.search;
+		var typeid = search.secondaryvalue;
+		var sessionid = session.f_id;
+		var date = search.daterange;
+		var pitchtypelist = search.pitchtypelist;
+		var pitchactionlist = search.pitchactionlist;
+		
+		var creds = controls.creds;
+		
+		session.f_results = [];		
+		if (search.secondarysearchtypeid == defines.searchtype.batter)
+			{
+			session.f_results = 
+					defines.initializeSessionResultSummary(pitchtypelist,pitchactionlist,session.f_typeid)
+
+			var hlIndex = -1;
+			var scIndex = -1;
+			var pcIndex = -1;
+			var result  = session.f_results[0];
+			
+			for (var j = 0; j < result.f_results.length; j++)
+				{
+				if (result.f_results[j].f_pc == 1)
+					pcIndex = j;
+				else if (result.f_results[j].f_sc == 1)
+					scIndex = j;
+				else if (result.f_results[j].f_hl == 1)
+					hlIndex = j;
+				}
+			sqlPitch.getAllByBatterStanceAndSession(creds,typeid,sessionid,date,function(err,pitches)
+				{
+				for (var i = 0; i < pitches.length; i++)
+					{
+					for (var j = 0; j < session.f_results.length; j++)
+						{
+						var result = session.f_results[j];
+						
+						if (result.f_typeid == pitches[i].f_typeid)
+							{
+							for (k = 0; k < result.f_results.length; k++)
+								{
+								if (result.f_results[k].f_id == pitches[i].f_actionid)
+									{
+									var actiontype = result.f_results[k];
+									
+									if (actiontype.f_id == pitches[i].f_actionid)
+										{
+										actiontype.f_c++;
+										result.f_results[pcIndex].f_c++;
+										
+										if (actiontype.f_iss > 0)
+											result.f_results[scIndex].f_c++;
+			
+										if ( (pitches[i].f_cl != '') && (pitches[i].f_cl == pitches[i].f_hl) )
+											result.f_results[hlIndex].f_c++;
+											
+										break;
+										}
+									}
+								}
+							}
+						}
+					}
+		
+				sqlSession.callbackListNodeCreateSummary(session,controls,function(err,result) 
+					{
+					callback(err,result);
+					});
+				});
+			}
+		else if (search.secondarysearchtypeid == defines.searchtype.pitchtype)
+			{					
+			var pitchtype = defines.initializeSessionResultPitchType(typeid,pitchactionlist,session.f_typeid)
+			session.f_results.push (pitchtype);
+			var hlIndex = -1;
+			var scIndex = -1;
+			var pcIndex = -1;
+			var result = session.f_results[0];
+			
+			for (var j = 0; j < result.f_results.length; j++)
+				{
+				if (result.f_results[j].f_pc == 1)
+					pcIndex = j;
+				else if (result.f_results[j].f_sc == 1)
+					scIndex = j;
+				else if (result.f_results[j].f_hl == 1)
+					hlIndex = j;
+				}
+			sqlPitch.getAllByPitchTypeAndSession(creds,typeid,sessionid,date,function(err,pitches)
+				{
+				for (var i = 0; i < pitches.length; i++)
+					{
+					for (var j = 0; j < session.f_results.length; j++)
+						{
+						var result = session.f_results[j];
+						
+						for (k = 0; k < result.f_results.length; k++)
+							{
+							if (result.f_results[k].f_id == pitches[i].f_actionid)
+								{
+								var actiontype = result.f_results[k];
+									
+								actiontype.f_c++;
+								result.f_results[pcIndex].f_c++;
+									
+								if (actiontype.f_iss > 0)
+									result.f_results[scIndex].f_c++;
+			
+								if ( (pitches[i].f_cl != '') && (pitches[i].f_cl == pitches[i].f_hl) )
+									result.f_results[hlIndex].f_c++;
+									
+								break;
+								}
+							}
+						}
+					}
+					
+				for (var j = 0; j < session.f_results.length; j++)
+					session.f_results[j] = sqlSession.calculateTotals(session.f_results[j]); 
+
+				callback(err,session);					
+				});
+			}			
+		else if (search.secondarysearchtypeid == defines.searchtype.pitchaction)
+			{
+			var pitchaction = defines.initializeSessionResultPitchType(typeid,pitchtypelist,session.f_typeid)
+			session.f_results.push (pitchaction);
+			var hlIndex = -1;
+			var scIndex = -1;
+			var pcIndex = -1;
+			var result = session.f_results[0];
+			
+			for (var j = 0; j < result.f_results.length; j++)
+				{
+				if (result.f_results[j].f_pc == 1)
+					pcIndex = j;
+				else if (result.f_results[j].f_sc == 1)
+					scIndex = j;
+				else if (result.f_results[j].f_hl == 1)
+					hlIndex = j;
+				}
+
+			sqlPitch.getAllByPitchActionAndSession(creds,typeid,sessionid,date,function(err,pitches)
+				{
+				for (var i = 0; i < pitches.length; i++)
+					{
+					for (var j = 0; j < session.f_results.length; j++)
+						{
+						var result = session.f_results[j];
+
+						for (k = 0; k < result.f_results.length; k++)
+							{
+							if (result.f_results[k].f_id == pitches[i].f_typeid)
+								{
+								var actiontype = result.f_results[k];
+									
+								actiontype.f_c++;
+								result.f_results[pcIndex].f_c++;
+			
+								if ( (pitches[i].f_cl != '') && (pitches[i].f_cl == pitches[i].f_hl) )
+									result.f_results[hlIndex].f_c++;
+							
+								break;
+								}
+							}
+						}
+					}
+					
+				for (var j = 0; j < session.f_results.length; j++)
+					session.f_results[j] = sqlSession.calculateTotals(session.f_results[j]); 
+
+				callback(err,session);					
+				});
+			}
+		},
 };
-
-
-
-
-
 
 
 /*********************************************************************************
@@ -1053,13 +1399,42 @@ var sqlPitch = {
 			});
 	},
 		
-	getAllByPitchType:function (creds,typeid,callback) {
-		var sql = "SELECT * FROM " + this.tblName + 
-									" WHERE f_typeid=?" +
-									" ORDER BY " + 'f_id' + " " + 'ASC';				
+	getAllByPitchType:function (creds,typeid,date,callback)
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_created ',this.tblName);
+		var whereSQL = " WHERE f_typeid=?";
+		
+		if (dateSQL != null)
+			var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+		else
+			var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';	
+			
 		db.execute (creds,sql,[typeid],function(err,rows)
 			{
 
+			callback(err, rows)
+			});
+	},
+	getAllByPitchTypeAndSession:function (creds,typeid,sessionid,date,callback)
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_created',this.tblName);
+		var whereSQL = " WHERE f_typeid=? AND f_sessionid=?";
+		
+		if (dateSQL != null)
+			var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+		else
+			var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';	
+										
+		db.execute (creds,sql,[typeid,sessionid],function(err,rows)
+			{
 			callback(err, rows)
 			});
 	},
@@ -1070,11 +1445,51 @@ var sqlPitch = {
 									" ORDER BY " + 'f_id' + " " + 'ASC';				
 		db.execute (creds,sql,[actionid],function(err,rows)
 			{
-			if ( (rows) && (rows.length > 0) )
-				{
-				for (var i = 0; i < rows.length; i++)
-					rows[i].f_pitchtyperesults = JSON.parse(rows[i].f_pitchtyperesults);
-				}
+			callback(err, rows)
+			});
+	},
+
+	getAllByPitchActionAndSession:function (creds,actionid,sessionid,date,callback)
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_created',this.tblName);
+		var whereSQL = " WHERE f_actionid=? AND f_sessionid=?";
+		
+		if (dateSQL != null)
+			var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL + " AND " + dateSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';
+		else
+			var sql = 	"SELECT * FROM " + this.tblName +
+							whereSQL +
+							" ORDER BY " + 'f_id' + " " + 'ASC';	
+		
+		db.execute (creds,sql,[actionid,sessionid],function(err,rows)
+			{		
+			callback(err, rows)
+			});
+	},
+	
+	getAllByBatterStanceAction:function (creds,stance,callback) {
+		var sql = "SELECT * FROM " + this.tblName + 
+									" WHERE f_bstance=?" +
+									" ORDER BY " + 'f_id' + " " + 'ASC';				
+		db.execute (creds,sql,[stance],function(err,rows)
+			{
+			
+			callback(err, rows)
+			});
+	},
+
+	getAllByBatterStanceAndSession:function (creds,stance,sessionid,date,callback)
+		{
+		var dateSQL = sqlUtils.getDateRangeSQL(date,'f_date_created',this.tblName);
+		
+		var sql = "SELECT * FROM " + this.tblName + 
+									" WHERE f_bstance=? AND f_sessionid=?" +
+									" ORDER BY " + 'f_id' + " " + 'ASC';				
+		db.execute (creds,sql,[stance,sessionid],function(err,rows)
+			{
+			
 			callback(err, rows)
 			});
 	},
@@ -1090,7 +1505,6 @@ var sqlPitch = {
 	
 	add:function(creds,obj,callback) {
 		obj.f_date_created = gptdt.getISODateTime();
-		obj.f_date_lastmodified = gptdt.getISODateTime();
 		
 		var sql = "INSERT INTO " + this.tblName + " SET ?";
 		
@@ -1109,14 +1523,12 @@ var sqlPitch = {
 	},
 };
 
-
-
 /*********************************************************************************
 	processList functions
 
 
 **********************************************************************************/
-var pList = {
+var sqlList = {
 	
 	asyncControls:function(creds,list,threads,callback)
 		{
@@ -1132,7 +1544,7 @@ var pList = {
 	processNode:function (node,cntls,callback)
 		{
 		//gpthp.writeDebug('DEBUG:processList Node...Start');
-		cntls.processNodeCallback(cntls.creds,node,cntls,function (err,result)
+		cntls.processNodeCallback(node,cntls,function (err,result)
 			{
 			//gpthp.writeDebug('DEBUG:processList Node...Exit');
 			cntls.processResults.push(result);
@@ -1160,12 +1572,12 @@ var pList = {
 						{
 						cntls.iNumRunning++;
 						var node = cntls.processList.shift();	
-						pList.processNode(node, cntls, function(err, node)
+						sqlList.processNode(node, cntls, function(err, node)
 							{
 							cntls.iNumRunning--;
 							
 							if (cntls.processList.length > 0)
-								pList.processList(cntls,callback);
+								sqlList.processList(cntls,callback);
 
 							else if (cntls.iNumRunning <= 0)
 								{
@@ -1185,6 +1597,7 @@ var pList = {
 		
 
 
-module.exports={sqlUtils,sqlSystem,sqlUser,sqlSession,sqlTeam,sqlPitch,sqlPitchType,sqlPitchAction};
+module.exports={sqlUtils,sqlList,sqlSystem,sqlUser,sqlSession,sqlTeam,sqlPitch,sqlPitchType,
+				sqlPitchAction};
 
 	

@@ -19,7 +19,22 @@ var gptmain =
 	batterList: [ 	{'f_name':defines.leftright.str.right,'f_id':defines.leftright.right},
 					{'f_name':defines.leftright.str.left,'f_id':defines.leftright.left}
 					],
-	
+	sessionList: [
+					{'f_name':defines.sessiontype.str.bullpen,'f_id':defines.sessiontype.bullpen},
+					{'f_name':defines.sessiontype.str.scrimmage,'f_id':defines.sessiontype.scrimmage},
+					{'f_name':defines.sessiontype.str.game,'f_id':defines.sessiontype.game},
+				],
+	statsearchList : [
+					{'f_name':defines.searchtype.str.player, 'f_id':defines.searchtype.player},
+					{'f_name':defines.searchtype.str.classyear, 'f_id':defines.searchtype.classyear},
+					{'f_name':defines.searchtype.str.team, 'f_id':defines.searchtype.team},
+					{'f_name':defines.searchtype.str.umpire, 'f_id':defines.searchtype.umpire},
+					{'f_name':defines.searchtype.str.opponent, 'f_id':defines.searchtype.opponent},
+					{'f_name':defines.searchtype.str.batter, 'f_id':defines.searchtype.batter},
+					{'f_name':defines.searchtype.str.pitchtype, 'f_id':defines.searchtype.pitchtype},
+					{'f_name':defines.searchtype.str.pitchaction, 'f_id':defines.searchtype.pitchaction}
+					],
+					
 	objMainCmds:function()
 		{			
 		this.f_callbackSearch = null;
@@ -76,7 +91,7 @@ var gptmain =
 		gptmain.setMainContentLocation();
 		
 		// this code resizes table column headers
-		$($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+		$($.fn.dataTable.tables(true)).DataTable().columns.adjust().draw();
 		
 		gptmain.setPitchView();
 		},
@@ -153,10 +168,14 @@ var gptmain =
 		{
 		gptmain.setOnlineStatus(true)
 		gptcomm.processLocalDBUpload()
+
+		kwbball.buildBottomMenu(gptmain.loginUser.f_typeid);
 		},
 	offline:function()
 		{
 		gptmain.setOnlineStatus(false);
+		
+		kwbball.buildBottomMenu(gptmain.loginUser.f_typeid);
 		},
 	
 	setImage:function(elemId,imagefile,opacity,color,scrFlag)
@@ -206,6 +225,9 @@ var gptmain =
 		{
 		var cnt = 0;
 		var cntMax = 500;
+		
+		var timeout = modal.displaySpinner('modalSpinnerParent',true);
+			
 		var timeOutId = setInterval(function () 
 			{
 			cnt++;
@@ -224,6 +246,7 @@ var gptmain =
 						callback()
 					}
 					
+				modal.displaySpinner('modalSpinnerParent',false);
 				return;
 				}
 
@@ -332,6 +355,8 @@ var gptmain =
 			case 'cmdSettingsCoaches':
 			case 'cmdSettingsLists':
 			case 'cmdSettingsSystem':
+			case 'cmdNameListNew':
+			case 'cmdNameListEdit':
 				gptsystem.loadConfig(cmdId,args);
 				break;
 			case 'cmdSessions':
@@ -342,6 +367,7 @@ var gptmain =
 				gptsession.loadConfig(cmdId,args);
 				break;
 			case 'cmdStats':
+			case 'cmdStatsNoResults':
 				gptstat.loadConfig(cmdId,args);
 				break;
 			case 'cmdUserLogin':
@@ -516,6 +542,8 @@ var gptmain =
 				gptmain.activeSystem.f_opacity_gameimage,gptmain.activeSystem.f_color_gameimage,false);
 		gptmain.setImage('cmdSessionScrimmage',defines.SCRIMMAGE_IMAGE_FILE,
 				gptmain.activeSystem.f_opacity_scrimmageimage,gptmain.activeSystem.f_color_scrimmageimage,false);
+
+		kwbball.buildBottomMenu(gptmain.loginUser.f_typeid);
 		},
 		
 	processAppVersionUpdate:function(callback)

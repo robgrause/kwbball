@@ -107,7 +107,6 @@ var gpttb =
 		return;
 		},
 		
-		
 	tableUpdateByIndex:function (newobj, updateIndex, apiCmd, tblName)
 		{
 		var tblElem = "#" + tblName;

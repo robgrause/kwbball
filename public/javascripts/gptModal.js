@@ -209,7 +209,7 @@ var modal =
 		
 	spinnerparentId : '',
 	timeOutId : 0,
-	spinnerTime : 20,
+	spinnerTime : 5,
 	callback : null,
 	displaySpinner:function (parentId, display)
 		{
@@ -230,7 +230,6 @@ var modal =
 			modal.setDivControlsShowState(parentId, true, true);
 			
 			parentElem.innerHTML = "<div class='lds-roller'><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>";
-		
 			modal.timeOutId = setTimeout(() => 
 				{
 				modal.displaySpinner (modal.spinnerparentId, false)
@@ -246,7 +245,7 @@ var modal =
 			modal.deleteElementsByClass('lds-roller')
 			
 			parentElem.innerHTML = "";
-				
+
 			clearTimeout(modal.timeOutId);
 			modal.spinnerparentId = '';
 			modal.timeOutId = 0;

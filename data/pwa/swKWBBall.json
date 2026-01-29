@@ -1,9 +1,9 @@
 {
    "name": "KW Baseball",
-   "short_name": "KWBBall",
+   "short_name": "KW Baseball",
    "id" : "https://kwbball.greenpasturetech.com/",
    "start_url": "https://kwbball.greenpasturetech.com/",
-   "description": "Baseball Pitch Tracking App",
+   "description": "KW Baseball Pitch Tracking App",
    "scope": "/",
    "display": "standalone",
    "background_color": "#FFFFFF",
@@ -40,6 +40,15 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+ "screenshots": [
+      {
+      "src": "/images/KWBBallBackground.jpg",
+      "sizes": "640x320",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "KW Baseball Pitch Tracking App"
+      }
+   ]
 }
 

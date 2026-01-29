@@ -39,6 +39,23 @@ var gptsystem =
 			}
 		},
 		
+	enableNameListCmds:function(tblName)
+		{	
+		var items = gpttb.tableGetDataObjects (tblName);
+
+		var show = true;
+		if ( (items == undefined) || (items.length <= 0) )
+			show = false;
+
+		gptut.setShowState('cmdMainNew', true);
+		gptut.setShowState('cmdMainEdit', show);
+		
+		if (show == true)
+			{
+			var item = gpttb.getTblSelectedObj(tblName);
+			gptut.setDisabledState('cmdMainEdit', (item == undefined));		
+			}
+		},
 	getCoachesList:function(callback)
 		{
 		gptmain.coachList = [];
@@ -147,7 +164,10 @@ var gptsystem =
 				$(e).removeClass('selectedRow');
 			}
 		
-		gptsystem.enableListCmds(tblName);
+		if (tblName == 'tblNameList')
+			gptsystem.enableNameListCmds(tblName);
+		else
+			gptsystem.enableListCmds(tblName);
 		},
 		
 	buildPlayerSearchDropDown:function()
@@ -212,7 +232,8 @@ var gptsystem =
 		var index = parseInt(selectElem.getAttribute('data-index'));
 	
 		var valueElem = document.getElementById('inputPlayerPropertyListId');
-		obj = {}
+
+		obj = {};
 		if (list[index].cmd == 'usergetallbylastname')
 			obj.f_lname = valueElem.value;
 		else if (list[index].cmd == 'usergetallbyclassyear')
@@ -257,7 +278,7 @@ var gptsystem =
 		
 		var findElem = document.getElementById('divPlayerFindId');
 		findElem.addEventListener("click",this.onclickPlayerFind);
-		findElem.innerHTML = 'Find';
+		findElem.innerHTML = 'FIND';
 		
 		var list = [
 					{'label':'Last Name','cmd':'usergetallbylastname'},
@@ -290,11 +311,11 @@ var gptsystem =
 			var cmds = new gptmain.objMainCmds();
 			cmds.f_callbackNew = gptsystem.callbackNameListNew;
 			cmds.f_callbackEdit = gptsystem.callbackNameListEdit;
-			cmds.f_callbackDelete = gptsystem.callbackNameListDelete;
-			cmds.f_showDelete = true;
+			//cmds.f_callbackDelete = gptsystem.callbackNameListDelete;
+			//cmds.f_showDelete = true;
 			gptmain.registerCmds(cmds);
 			
-			gptsystem.enableListCmds('tblNameList')
+			gptsystem.enableNameListCmds('tblNameList')
 			});
 		},
 	onclickListType:function(e)
@@ -335,9 +356,12 @@ var gptsystem =
 		upElem.innerHTML = '>';
 		
 		var list = [
-					{'label':'Pitch Types','cmd':'pitchtypeget'},
-					{'label':'Pitch Calls','cmd':'pitchactionget'},
-					{'label':'Teams','cmd':'teamget'}
+					{'label':'Pitch Types','singlelabel':'Pitch Type',
+							'cmd':'pitchtypeget','cmdupdate':'pitchtypeupdate'},
+					{'label':'Pitch Calls','singlelabel':'Pitch Call',
+							'cmd':'pitchactionget','cmdupdate':'pitchactionupdate'},
+					{'label':'Teams','singlelabel':'Team','cmd':'teamget',
+							'cmd':'teamget','cmdupdate':'teamupdate'}
 					];
 		var selectElem = document.getElementById('divListTypeSelectId');
 		selectElem.addEventListener("click",this.onclickListType);
@@ -385,25 +409,49 @@ var gptsystem =
 			
 		gptmain.waitToComplete(callback);
 		},
+
+	getNamelistProperties:function()
+		{
+		// initialize obj as objPitchType,
+		// objTeam and objPitchAction are same
+		var item = new defines.objPitchType()
+		item.f_name = $('#f_system_namelist_name').val();
 		
-	callbackNameListSave:function()
-		{
-
+		return(item);
 		},
-	callbackNameListNew:function()
+	validateNameItem:function(item)
 		{
-
+		if (item.f_name.length <= 0)
+			{
+			modal.displayModalOpen ("WARNING","'NAME' must be specified.",
+								null, null,	modal.modalParams.mode.modeOk,null);
+			return (false);
+			}
 		},
-	callbackNameListEdit:function()
+	callbackSaveNameList:function()
 		{
+		var selectElem = document.getElementById('divListTypeSelectId');
+		var list = JSON.parse(selectElem.getAttribute('data-list'));
+		var index = parseInt(selectElem.getAttribute('data-index'));
 
+		var apicmd = list[index].cmdupdate;
+		
+		vat item = gptsystem.getNamelistProperties();	
+		
+		if (gptsystem.validateNameItem(item) != true)
+			return;
+		
+		gptmain.waitingFlag = true;
+		gptcomm.processServerApi(apicmd, item, async function(obj,apiCmd)
+			{
+			gptmain.waitingFlag = false;
+			});
+
+		gptmain.waitToComplete(callback);
 		},
-	callbackNameListDelete:function()
-		{
-
-		},
-
-
+	callbackNameListNew:function(){gptmain.cmdCentral('cmdNameListNew');},
+	callbackNameListEdit:function()	{gptmain.cmdCentral('cmdNameListEdit');},
+		
 	setSystemInPropertiesForm:function(obj)
 		{
 		if (obj == null)
@@ -727,6 +775,23 @@ var gptsystem =
 				
 				gptsystem.setSystemInPropertiesForm(gptmain.activeSystem);
 				});
+			}
+		else if (	(cmdId == 'cmdNameListNew') || (cmdId == 'cmdNameListEdit') )
+			{
+			gptut.setDivShowState('divSettingsListProperties',true);
+			
+			var selectElem = document.getElementById('divListTypeSelectId');
+			var list = JSON.parse(selectElem.getAttribute('data-list'));
+			var index = parseInt(selectElem.getAttribute('data-index'));
+
+			var labelElem = document.getElementById('labelNameList');
+			labelElem.innerHTML = list[index].singlelabel;
+
+			var cmds = new gptmain.objMainCmds();
+			cmds.f_callbackSave = gptsystem.callbackSaveNameList;
+			cmds.f_callbackDelete = null;
+			cmds.f_showDelete = false;
+			gptmain.registerCmds(cmds);
 			}
 		},
 };
