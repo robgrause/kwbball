@@ -83,7 +83,7 @@ var gptmain =
 		// calculated in millseconds
 		var elapsed = gptdt.formatElapsedTime( (currentTime - gptmain.sessionlengthStartTime));
 
-		$('#labelSessionLengthId').text('Session:' + elapsed);	
+		$('#labelSessionLengthId').text(elapsed);	
 		},
 	browserResize:function()
 		{
@@ -373,6 +373,9 @@ var gptmain =
 			case 'cmdUserLogin':
 			case 'cmdUserRefresh':
 				gptuser.loadConfig(cmdId,args);
+				break;	
+			case 'cmdHistory':
+				gpthistory.loadConfig(cmdId,args);
 				break;
 			}
 		},
@@ -479,8 +482,11 @@ var gptmain =
 		.then((registration) =>
 			{
 			console.log("service worker registered");
+			
 			registration.addEventListener("updatefound", function() 
 				{
+				gptmain.showReloadDialog(true)
+				
 				const worker = registration.installing;
 				
 				if (worker == undefined)
@@ -498,6 +504,8 @@ var gptmain =
 						// Here is when the activated state was triggered from the lifecycle 
 						// of the service worker.
 						// This will trigger on the first install and any updates.
+						gptmain.showReloadDialog(false);
+						
 						gptmain.newInstallCleanup();
 						}
 					});
@@ -505,12 +513,20 @@ var gptmain =
 
 			navigator.serviceWorker.addEventListener('controllerchange', function() 
 				{
+console.log('CHANGE');
 				// This will be triggered when the service worker is replaced with a new one.
 				// We do not just reload the page right away, we want to make sure we are fully activated
 				//console.log('state: ' +  'updated');
 				//gptmain.newInstallCleanup();
 				});
 
+			// this is'nt working. Would like to get a message when app gains focus 
+			// then I can trigger a version update check
+			navigator.serviceWorker.addEventListener('message', function(event) 
+				{
+console.log('GOT MESSAGE')
+				});
+				
 			gptmain.serviceworkerRegistration = registration;
 			})
 		.catch((e) =>
@@ -551,13 +567,17 @@ var gptmain =
 		// NEED to wait for return with data before moving on.
 		gptmain.waitingFlag = true;
 		var obj = {'f_version':version.version}
+
 		gptcomm.processServerApi('checkversion', obj, function(obj,apiCmd)
 			{
+			if (gptmain.version != obj.f_version)
+				gptmain.newInstallCleanup()
+			
 			//set global version
 			gptmain.version = obj.f_version;
 			gptmain.waitingFlag = false;
 			});
-		gptmain.waitToComplete(callback);
+		gptmain.waitToComplete(null);
 		},
 		
 	getIndexDBLogin:async function()
@@ -582,10 +602,7 @@ var gptmain =
 		if (navigator.onLine != true)
 			return;
 			
-		//upload any queued objects
-		await gptcomm.processLocalDBUpload();
-			
-		gptmain.processAppVersionUpdate(function()
+		gptmain.processAppVersionUpdate(async function()
 			{
 			// version update required
 			if (gptmain.version != version.version)
@@ -596,6 +613,9 @@ var gptmain =
 				console.log('process page reload');
 				window.location.reload(false);
 				}
+				
+			//upload any queued objects
+			await gptcomm.processLocalDBUpload();
 			});
 		},
 };

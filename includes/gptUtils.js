@@ -343,10 +343,60 @@ var gptut =
 		for (var i in attrs)
 			{
 			if ( (attrs[i].attrkey != undefined) && (attrs[i].attrvalue != undefined) )
-				elem.setAttributeNS(null,attrs[i].attrkey,attrs[i].attrvalue);
+				elem.setAttribute(attrs[i].attrkey,attrs[i].attrvalue);
 			}
 			
 		return (elem);
+		},
+		
+	createText:function(txtId,text,pt,positionMode,attrs,parentId)	
+		{
+		if (txtId)
+			var textId = txtId;
+		 else
+			var textId = 'text';
+		
+		var svgns = "http://www.w3.org/2000/svg";
+		
+		var elem = document.createElementNS(svgns, "text");
+		elem.setAttributeNS(null,"id", textId);
+		elem.setAttributeNS(null,"x",pt.x);
+		elem.setAttributeNS(null,"y",pt.y);
+		
+		if (positionMode)
+			elem.setAttributeNS(null,"postiton",positionMode);
+		
+		gptut.applyAttrsToElem(elem, attrs);
+		
+		var elemText = document.createTextNode(text);
+		elem.appendChild(elemText);
+
+		if (parentId)
+			{
+			var textLayerElem = document.getElementById(parentId);
+			textLayerElem.appendChild(elem)
+			}
+			
+		return(elem);
+		},
+		
+	createLabel:function(txtId,text,attrs,parentId)	
+		{
+		if (txtId)
+			var textId = txtId;
+		 else
+			var textId = 'text';
+	
+		var elem = document.createElement("label");
+		elem.setAttribute("id", textId);
+		elem.innerHTML = text;
+		
+		gptut.applyAttrsToElem(elem, attrs);
+	
+		var textLayerElem = document.getElementById(parentId);
+		textLayerElem.appendChild(elem)
+				
+		return(elem);
 		},
 		
    waitdelay:async function (ms) 

@@ -1391,10 +1391,11 @@ var sqlPitch = {
 	getAllBySession:function (creds,sessionid,callback) {
 		var sql = "SELECT * FROM " + this.tblName + 
 									" WHERE f_sessionid=?" +
-									" ORDER BY " + 'f_id' + " " + 'ASC';				
+									" ORDER BY " + 'f_id' + " " + 'ASC';
+console.log(sql)			
 		db.execute (creds,sql,[sessionid],function(err,rows)
 			{
-
+console.log(rows)
 			callback(err, rows)
 			});
 	},

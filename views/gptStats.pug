@@ -2,7 +2,7 @@ block content
 	div(id='divStats')
 		div.row.mt-2
 			div.col-md-6.text-start
-				labe STATS
+				h6 STATS
 		div.row.mt-2
 			div.col-md-6.text-end
 				button.aGPT(id="btnStatFind", title='find') FIND
@@ -37,12 +37,40 @@ block content
 				div(class="form-group form-floating")
 					select(class='form-select',id="f_statsearch_daterange" placeholder="")
 					label(class="form-label" for="f_statsearch_daterange") Dates
-	div(id='divStatsResults')
-		div.row.mt-2
-			div.col-6.text-start
-				label.labelText(id='labelResultsHeader') STATS
-		div.row.mt-2
-			div.col-12(id='divStatResultsParentId')
+	div.pitchmap_wrapper(id='divStatsResults')
+		div.pitchmap_resulttable(id='divStatResultsTable')
+			div.row
+				div.col-12.text-start
+					b.labelText(id='labelResultsHeader') STATS
+			div.row
+				div.col-12(id='divStatResultsParentId')
+		div.pitchmap_resultmap(id='divStatResultsMap')
+			div.row
+				div.col-12.text-start
+					b.labelText(id='labelResultsHeader') MAP
+			div.pitchviewwrapper(id="divMapPitchParentId")
+			div.row
+				div.col-6.text-start
+					div(class="form-group form-floating")
+						select(class='form-select',id="f_statshow_pitchtype" placeholder="")
+						label.labelText(class="form-label" for="f_statshow_pitchtype") Pitch Type
+				div.col-6.text-end
+					div.row
+						div.col-9.text-end
+							b.labeText Pitch Count:
+						div.col-3.text-end
+							b.labelText(id="labelStatShowPitchCount", title='pitch count')
+					div.row
+						div.col-9.text-end
+							b.labeText Hit Count:
+						div.col-3.text-end
+							b.labelText(id="labelStatShowHitCount", title='hit count')
+					div.row
+						div.col-9.text-end
+							b.labeText Hit Rate:
+						div.col-3.text-end
+							b.labelText(id="labelStatShowPercent", title='percent')
+				hr
 	div(id='divStatNoResultsMsg')
 		div.row.mt-4
 			div.col-12

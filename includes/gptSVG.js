@@ -119,22 +119,7 @@ var gptsvg =
 
 		return(elem);
 		},
-/*		
-	rectCreate:function (elemid,parentid,pts,attrs)
-		{
-		gptut.deleteElement(elemId);
-				
-		var elem = document.createElementNS(gptsvg.svgns, "path");
-		elem.setAttributeNS(null,"id", elemId);
-	
-		gptsvg.attrsApply(elem, attrs)
-		
-		var parentElem = document.getElementById(parentId);
-		parentElem.appendChild(elem);
 
-		return(elem);
-		},
-*/
 };
 
 

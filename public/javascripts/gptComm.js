@@ -159,7 +159,7 @@ var gptcomm =
 			gptcomm.processOfflineCmd(apiCmd,dataCmd,callback)
 			return;
 			}
-		
+
 		var urlStr = defines.urlApiGet() + "/" + apiCmd;
 		var data = { 'credentials':gptcomm.gblCredentials,'apicmd':apiCmd,'data':dataCmd };
 
@@ -170,7 +170,7 @@ var gptcomm =
 		var initObject = {'method': 'POST', 'headers': reqHeader, 'body':JSON.stringify(data)};
 
 		var userRequest = new Request(urlStr, initObject);
-	
+
 		try
 			{
 			if (gptcomm.apicmdStackUpdate(apiCmd,true) == true)
@@ -178,11 +178,11 @@ var gptcomm =
 				gptcomm.processOfflineCmd(apiCmd,dataCmd,callback)
 				return;
 				}
-				
+
 			const response= await fetch(userRequest)
 
 			gptcomm.apicmdStackUpdate(apiCmd,false);
-		
+
 			if (response.ok != true)
 				{
 				if (response.status == 502)

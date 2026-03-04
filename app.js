@@ -56,10 +56,10 @@ app.use('/kwbball/api', gptroutes);
 //const version = require ('./includes/gptVersion');
 app.use('/', (req, res) => 
   {
+console.log(req.url);
+console.log(req.headers.host);
   if (! req.headers.host.includes(version.client_subdomain()))
     {
-console.log(version.client_subdomain())
-console.log(req.headers.host)
     console.log('REQUEST HOST: ' + req.headers.host)
     console.log('SERVICE HOST: ' + version.client_subdomain())
     var err = new Error('Bad host');

@@ -5,7 +5,7 @@
 ********************************************************************************/
 var version =
 	{
-	version : 'v1.14',
+	version : 'v1.16',
 	client_cache :'kwbball',
 
 	site:function () {return('greenpasturetech.com') },

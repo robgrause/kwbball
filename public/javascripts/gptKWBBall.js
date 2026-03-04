@@ -200,31 +200,37 @@ var kwbball =
 		{
 		var cmds = [];
 
-		if (menutype == defines.usertype.admin)
+		switch(menutype)
 			{
-			cmds.push({'label':'SETTINGS','menupos':'cmd1','cmdid':'cmdSettings','icon':['bi','bi-gear']});
-			cmds.push({'label':'SESSIONS','menupos':'cmd2','cmdid':'cmdSessions','icon':['bi','bi-bullseye']});
-			cmds.push({'label':'STATS','menupos':'cmd3','cmdid':'cmdStats','icon':['bi','bi-clipboard-data']});
+			case defines.usertype.admin:
+			case defines.usertype.coach:
+				{
+				cmds.push({'label':'SETTINGS','menupos':'cmd1','cmdid':'cmdSettings','icon':['bi','bi-gear']});
+				cmds.push({'label':'SESSIONS','menupos':'cmd2','cmdid':'cmdSessions','icon':['bi','bi-bullseye']});
+				cmds.push({'label':'STATS','menupos':'cmd3','cmdid':'cmdStats','icon':['bi','bi-clipboard-data']});
+
+				break;
+				}
+			case defines.usertype.player:
+				{
+				cmds.push({'label':'ME','menupos':'cmd1','cmdid':'cmdSettingsProfile','icon':['bi','bi-person-fill']});
+				//cmds.push({'label':'SESSIONS','menupos':'cmd2','cmdid':'cmdSessions','icon':['bi','bi-bullseye']});
+				cmds.push({'label':'STATS','menupos':'cmd2','cmdid':'cmdStats','icon':['bi','bi-clipboard-data']});
+			
+				break;
+				}
+			default:
+				break;
 			}
-		else if (menutype == defines.usertype.coach)
-			{
-			cmds.push({'label':'SETTINGS','menupos':'cmd1','cmdid':'cmdSettings','icon':['bi','bi-gear']});
-			cmds.push({'label':'SESSIONS','menupos':'cmd2','cmdid':'cmdSessions','icon':['bi','bi-bullseye']});
-			cmds.push({'label':'STATS','menupos':'cmd3','cmdid':'cmdStats','icon':['bi','bi-clipboard-data']});
-			}
-		else if (menutype == defines.usertype.player)
-			{
-			cmds.push({'label':'ME','menupos':'cmd1','cmdid':'cmdSettingsProfile','icon':['bi','bi-person-fill']});
-			//cmds.push({'label':'SESSIONS','menupos':'cmd2','cmdid':'cmdSessions','icon':['bi','bi-bullseye']});
-			cmds.push({'label':'STATS','menupos':'cmd2','cmdid':'cmdStats','icon':['bi','bi-clipboard-data']});
-			}
-				
+			
 		gptut.deleteElementChildren('idMainBottomMenu')
 		
 		for (var i = 0; i < cmds.length; i++)
 			kwbball.createCommand(cmds[i],'idMainBottomMenu');
 			
 		gptut.setShowState('idMainBottomMenu', true);
+
+		//gptut.setDisabledState('cmd3',true);
 		},
 		
 	loadConfig:async function (credentials)
@@ -283,6 +289,15 @@ var kwbball =
 			// NOTE: the onload event is not always called
 			//window.addEventListener("load", function(e){kwbball.loadKWBBall(e)});
 
+
+		document.addEventListener("visibilitychange", function()
+			{
+			if (document.visibilityState == 'visible')
+				{
+				gptmain.checkForAppVersionUpdate()
+				}
+			});
+	
 		kwbball.ro = new ResizeObserver(entries => {gptmain.browserResize();});
 		kwbball.ro.observe(document.getElementById('idMainTopMenu'));
 				

@@ -436,7 +436,7 @@ var gptsystem =
 
 		var apicmd = list[index].cmdupdate;
 		
-		vat item = gptsystem.getNamelistProperties();	
+		var item = gptsystem.getNamelistProperties();	
 		
 		if (gptsystem.validateNameItem(item) != true)
 			return;

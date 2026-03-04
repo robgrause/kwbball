@@ -2,6 +2,12 @@ var prodCache = version.version + "_" + version.client_cache;
 var processMsg = false
 
 const prodAssets = [
+	 "/pwa/swKWBBall.min.js",
+	 "/html/KWBBall.html",
+	 "/javascripts/KWBBall.min.js",
+	 "/stylesheets/Modal.min.css",
+	 "/stylesheets/KWBBall.min.css",
+	
 	 "/images/favicon-96x96.png",
 	 "/images/favicon.svg",
 	 "/images/favicon.ico",
@@ -10,12 +16,8 @@ const prodAssets = [
 	 "/images/KWBBallBullpen.png",
 	 "/images/KWBBallGame.png",
 	 "/images/KWBBallScrimmage.jpg",
-	 "/images/KWBBallLogo.svg",
-	 "/pwa/swKWBBall.min.js",
-	 "/html/KWBBall.html",
-	 "/javascripts/KWBBall.min.js",
-	 "/stylesheets/styleModal.min.css",
-	 "/stylesheets/styleKWBBall.min.css",
+/*	 "/images/KWBBallLogo.svg", */
+	
 	 "https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js",
 	 "https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js",
 	 "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap",
@@ -52,7 +54,7 @@ self.addEventListener("install", event => {
 	    {
 	    try
 	       {
-	       console.log('TRYING: ' +  prodAssets[i])
+	       console.log('CACHING: ' +  prodAssets[i])
 	       await cache.add(prodAssets[i]);
 	     //  cache.addAll(prodAssets)
 	       }
@@ -139,13 +141,18 @@ verifyIfCached = function(url)
 self.addEventListener("fetch", event => 
    {
    postMsg('FETCH: ' + event.request.url)
-   
+
    var cacheType = verifyIfCached(event.request.url);
    
    if (cacheType == 'nocache')
       {
+//console.log('URL = ' + event.request.url);
       postMsg('Not cached : ' + event.request.url)
       const newHeaders = new Headers(event.request.headers);
+
+//var newreponse  = event.request.clone()
+//     return (newreponse);
+      
       return new Response("not cached", 
 	       {
 	       status: 200,
@@ -268,6 +275,12 @@ const cacheFirst = async ({ request, fallbackUrl }) =>
    postMsg('Checking local cache: ' + request.url)
    const responseFromCache = await caches.match(request);
 	 
+   if ( (responseFromCache) && (responseFromCache.ok == true) )
+      {
+      postMsg('Returning local cache response : ' + request.url)
+      return responseFromCache;
+      }
+      
    var responseFromNetwork = null;
    try
       {
@@ -330,9 +343,7 @@ self.addEventListener("push", function(event)
 		};
    event.waitUntil(self.registration.showNotification(data.title, options))
    });
-   
 			
-//background Upload Timesheet
 self.addEventListener("sync", async (event) => 
    {
    if (navigator.onLine == true)
@@ -343,4 +354,14 @@ self.addEventListener("sync", async (event) =>
 	 event.waitUntil(gptcomm.processTimesheetUpload())
 	 }
       }
-});
+   });
+
+//trying to use this to get a message when app gains focus.
+// then trigger an version update check
+self.addEventListener('message', async (event) => 
+   {
+   console.log('Service Worker received:', event.data);
+
+   if (event.data === 'visibility')
+      event.waitUntil(gptmain.checkForAppVersionUpdate())
+  });

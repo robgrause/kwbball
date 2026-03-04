@@ -25,12 +25,11 @@ exports.gpt_version_check = function (req, res)
 	var data = req.body;
 	var creds = data.credentials;
 	var obj = data.data;
-
-	writeDebug ('DEBUG:Checking version: ' + 
+	
+	if ( (creds) && (creds.f_loginUser) )
+		writeDebug ('DEBUG:Checking version: ' + 
 									creds.f_loginUser.f_fname + ' ' + creds.f_loginUser.f_lname);
-	
 	obj.f_version = version.version;
-	
 	sendMsg (req, res, '', obj);
 };
 
@@ -1070,5 +1069,18 @@ exports.gpt_stat_search = function (req, res) {
 				});
 			});
 		}
+};
 
+
+exports.gpt_pitch_bysessionid = function (req, res) {
+	var data = req.body;
+	var creds = data.credentials;
+	var obj = data.data;
+	
+	writeDebug ("DEBUG:Session pitchlist...");
+	
+	gptdb.sqlPitch.getAllBySession(creds,obj.sessionid,function(err,results)
+		{
+		sendMsg (req, res, err, results);
+		})
 };

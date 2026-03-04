@@ -33,20 +33,23 @@ block content
 							label.labelText(class='form-label' for="f_session_umpire") Umpire
 							datalist(id="list_Umpire")
 	div.sessionsmain_wrapper(id='divSessions')
-		div.cmd1.sessionbullpen(id='cmdSessionBullpen')
+		div.cmd1.sessionbullpen.labelLeft(id='cmdSessionBullpen')
 			label BULLPEN
-		div.cmd2.sessionscrimmage(id='cmdSessionScrimmage')
+		div.cmd2.sessionscrimmage.labelLeft(id='cmdSessionScrimmage')
 			label SCRIMMAGE
-		div.cmd3.sessiongame(id='cmdSessionGame')
+		div.cmd3.sessiongame.labelLeft(id='cmdSessionGame')
 			label GAME
 	div.pitchmain(id='divPitchMainId')
 		div.pitchdatacontrols(id='divPitchDataId')
 			div.pitchstop(id='divPitchStopId')
 			div.row
 				div.col-6.text-start
-					label(id='labelPlayerId')
+					h6(id='labelPlayerId')
+			div.row.mt-1
+				div.col-6.text-start
+					h6(id='labelSessionLengthId')
 				div.col-6.text-end
-					label(id='labelSessionLengthId')
+					h6(id='labelPitchCountId') PC :
 			div.row.mt-2(id='divPitchTableParentId')
 				div.col-12
 					table.pitchtable(id="tblSessionPitches",
@@ -64,17 +67,17 @@ block content
 			div.pitchbatter.hide(id='divPitchBatterId')
 				div.row
 					div.col-4
-						label Right
+						h6 Right
 					div.col-4
-						label BATTER
+						h6 BATTER
 					div.col-4
-						label Left
-				div.row
+						h6 Left
+				div.row.mb-2
 					div.col-4
 						input.form-check-input(type='radio',checked,name='pitchbatter',id='pitchbatterRightOptionId',value=0)
 					div.offset-4.col-4
 						input.form-check-input(type='radio',name='pitchbatter',id='pitchbatterLeftOptionId',value=0)
-			div.pitchviewwrapper(id="divPitchParentId")
+			div.pitchviewwrapper(id="divSessionPitchParentId")
 			div.pitchaction(id='divPitchActionId')
 				div.pitchactiondown(id='divPitchActionDownId')
 				div.pitchactionselect(id='divPitchActionSelectId')

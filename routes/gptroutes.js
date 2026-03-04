@@ -57,6 +57,9 @@ router.post('/api/sessionupload', server.gpt_session_upload);
 
 router.post('/api/statsearch', server.gpt_stat_search);
 
+router.post('/api/getpitchlistbysessionid', server.gpt_pitch_bysessionid);
+
 router.post('/api/checkversion', server.gpt_version_check);
+
 
 module.exports = router;

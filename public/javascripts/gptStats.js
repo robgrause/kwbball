@@ -1,5 +1,280 @@
 var gptstat = 
-	{	
+	{
+	activePitchlist = undefined,
+	activePitchtypelist = undefined,
+	
+	interpolateValue:function(value) 
+		{
+		value = parseInt(value);
+
+		if (value >= 85)
+			{
+			var bgcolor = 'rgb(255,0,0)'; //red
+			var color = '#FFFFFF';
+			}
+		else if ( (value < 85) && (value > 70) )
+			{
+			var bgcolor = 'rgb(' + 255 + ',' + 125 + ',' + 0 + ')'; //orange
+			var color = '#FFFFFF';
+			}
+		else if ( (value < 70) && (value > 55) )
+			{
+			var bgcolor = 'rgb(' + 255 + ',' + 255 + ',' + 0 + ')'; //yellow
+			var color = '#000000';
+			}
+		else if ( (value < 60) && (value > 40) )
+			{
+			var bgcolor = 'rgb(' + 0 + ',' + 255 + ',' + 0 + ')'; //green
+			var color = '#000000';
+			}
+		else if ( (value < 40) && (value > 25) )
+			{
+			var bgcolor = 'rgb(' + 0 + ',' + 255 + ',' + 125 + ')'; //turquose
+			var color = '#000000';
+			}
+		else if ( (value < 25) && (value > 10) )
+			{
+			var bgcolor = 'rgb(' + 0 + ',' + 255 + ',' + 255 + ')'; //cyan
+			var color = '#000000';
+			}
+		else if (value < 10)
+			{
+			var bgcolor = 'rgb(0,0,255)'; //blue
+			var color = '#FFFFFF';
+			}
+			
+		return({'color':color,'bgcolor':bgcolor});
+		},
+   
+	onchangeStatShowPitchType:function(e)
+		{
+		if (e)
+			e.stopPropagation();
+		
+		typeid = $('#f_statshow_pitchtype').val();
+
+		var pitchtypelist = gptstat.activePitchtypelist;
+
+		for(var i = 0; i < pitchtypelist.length; i++)
+			{
+			if (typeid == pitchtypelist[i].f_typeid)
+				{
+				document.getElementById('labelStatShowPitchCount').textContent = pitchtypelist[i].f_pc;
+				var percent = 100 * gptma.mathTrunc(pitchtypelist[i].f_percent,2);
+				document.getElementById('labelStatShowPercent').textContent = percent + '%';
+				document.getElementById('labelStatShowHitCount').textContent = pitchtypelist[i].f_hl;
+				}
+			}
+
+		var regions = gptsession.buildRegionsArray();
+		var pitchlist = gptstat.activePitchlist;
+
+		for (var i = 0; i < regions.length; i++)
+			{
+			var region = regions[i];
+			
+			for (var j = 0; j < pitchlist.length; j++)
+				{
+				var pitch = pitchlist[j];
+			
+				if ( (typeid == 0) || (typeid == pitch.f_typeid) )
+					{
+					var callregion = gptsession.getRegionByPitchBox(pitch.f_cl);
+					var hitregion = gptsession.getRegionByPitchBox(pitch.f_hl);
+
+					if (region.f_name == callregion)
+						{
+						region.f_numcall++;
+					
+						if (callregion == hitregion)
+							region.f_numhit++;
+						}
+					}
+				}
+			}
+		
+		for (var i = 0; i < regions.length; i++)
+			{
+			var region = regions[i];
+			
+			if (region.f_numcall > 0)
+				{
+				var percent = 0;
+				percent = gptma.mathTrunc(region.f_numhit / region.f_numcall, 2) * 100;
+				var colorset = gptstat.interpolateValue(percent)
+				region.f_bgcolor = colorset.bgcolor;
+				region.f_color = colorset.color;
+				region.f_label = percent + '%';
+				}
+			else
+				{
+//				region.f_bgcolor = region.f_base_bgcolor;
+//				region.f_color = region.f_base_color;
+//				region.f_label = '';
+				}
+			}
+	
+		gptsession.buildPitchBox(regions,gptsession.divMapPitchId);
+		},
+		
+	buildStatShowPitchTypeList:function(pitchlist)
+		{
+		objPitchData = function(name,typeid)
+			{
+			this.f_name = name;
+			this.f_typeid = typeid;
+			this.f_pc = 0;
+			this.f_hl = 0;
+			this.f_percent = 0;
+			};		
+		var compresslist = [];
+		compresslist.push(new objPitchData('ALL',0));
+		for (var i = 0; i < pitchlist.length; i++) 
+            {
+			var found = false;
+			for (var j = 0; j < compresslist.length; j++)
+				{
+				if (pitchlist[i].f_typeid == compresslist[j].f_typeid)
+					{
+					found = true;
+					break;
+					}
+				}
+			if (found == false)
+				{
+				var name = gptlist.getIdFromList(gptmain.pitchtypeList,'f_id',pitchlist[i].f_typeid,'f_name')
+				compresslist.push(new objPitchData(name,pitchlist[i].f_typeid))
+				}
+				
+			for (var j = 0; j < compresslist.length; j++)
+				{
+				if ( 	(compresslist[j].f_typeid == 0) ||
+						(pitchlist[i].f_typeid == compresslist[j].f_typeid) )
+					{
+					compresslist[j].f_pc++;
+					
+					if (pitchlist[i].f_cl == pitchlist[i].f_hl)
+						compresslist[j].f_hl++;
+					}
+				}
+
+			for (var j = 0; j < compresslist.length; j++)
+				{
+				if (compresslist[j].f_pc <= 0)
+					compresslist[j].f_percent = 0;
+				else
+					compresslist[j].f_percent = compresslist[j].f_hl / compresslist[j].f_pc;
+				}
+			}
+		return(compresslist)
+		},
+		
+	buildStatShowPitchTypeDropdown:function(list)
+		{
+		var $elem = $('#'+ 'f_statshow_pitchtype');
+
+		$elem.find('option').remove();
+
+		for (var i = 0; i < list.length; i++) 
+			{
+			var option = new Option (list[i].f_name,list[i].f_typeid);
+            $elem.append($(option));
+			}
+			
+		$elem.val(0);
+		},
+		
+	showPitchMap:function(pitchlist)
+		{
+		if ( (pitchlist == undefined) || (pitchlist.length <= 0) )
+			return;
+		
+		gptstat.activePitchlist = pitchlist;	
+		gptstat.activePitchtypelist = gptstat.buildStatShowPitchTypeList(pitchlist)
+		
+		gptstat.buildStatShowPitchTypeDropdown(gptstat.activePitchtypelist);
+		
+		var selectElem = document.getElementById("f_statshow_pitchtype");
+		selectElem.addEventListener("change",gptstat.onchangeStatShowPitchType);
+
+		gptstat.onchangeStatShowPitchType();
+		},
+	processonclickMap:async function (id, showMap)
+		{
+		gptut.removeClassAllElements('selectedRow');
+		gptut.removeClassAllElements('aPush');
+		
+		if (showMap != true)
+			{
+			var divElem = document.getElementById('divStatResultsTable')
+			divElem.style.flex = '0 0 100%';
+
+			var divElem = document.getElementById('divStatResultsMap')
+			divElem.style.flex = '0 0 0%';
+			
+			return;
+			}
+		else
+			{
+			var divElem = document.getElementById('divStatResultsTable')
+			divElem.style.flex = '0 0 50%';
+
+			var divElem = document.getElementById('divStatResultsMap')
+			divElem.style.flex = '0 0 50%';
+
+			var btnElem = document.getElementById(id)
+			var trElem =  document.getElementById('tr_' + id)
+			
+			if (! btnElem)
+				return;
+	
+			btnElem.classList.add('aPush');
+			trElem.classList.add('selectedRow');
+		
+			var pitchlist = btnElem.getAttribute('data-pitchlist');
+
+			if (pitchlist != undefined)
+				{
+				pitchlist = JSON.parse(pitchlist);
+				gptstat.showPitchMap(pitchlist);
+				}
+			else
+				{
+				await gptstat.getSessionPitchList(id,function(results,apiCmd)
+					{
+					var pitchlist = results;
+					btnElem.setAttribute('data-pitchlist',JSON.stringify(pitchlist));
+				
+					gptstat.showPitchMap(pitchlist);
+					});
+				}
+			}
+		},
+	onclickMap:function (e)
+		{
+		e.stopPropagation();
+		
+		var btnElem = e.target;
+
+		var showMap = ! btnElem.classList.contains ('aPush');
+		
+		gptstat.processonclickMap(e.target.id,showMap);
+		},
+		
+	getSessionPitchList:function(sessionid,callback)
+		{
+		gptmain.waitingFlag = true;
+		var obj = {'sessionid': sessionid};
+		gptcomm.processServerApi('getpitchlistbysessionid', obj, function(results,apiCmd)
+			{
+			callback(results,apiCmd)
+		
+			gptmain.waitingFlag = false;
+			});
+
+		gptmain.waitToComplete();
+		},
+		
 	generateSummaryResultTable:function(tblName,results,search)
 		{
 		gptut.setShowState('divStatResultsParentId',false);
@@ -56,10 +331,14 @@ var gptstat =
 		
 		var thElem = document.createElement('th');
 		tr1Elem.appendChild(thElem)
-		thElem.colSpan = 4;
+		thElem.colSpan = 5;
 		thElem.innerHTML = ' '
 	
 		// header rows
+		var thElem = document.createElement('th');
+		tr2Elem.appendChild(thElem)
+		thElem.innerHTML = 'Pitch Map';
+			
 		if (search.primarysearchtypeid == defines.searchtype.player)
 			{		
 			var thElem = document.createElement('th');
@@ -142,9 +421,21 @@ var gptstat =
 		for (var k = 0; k < results.length; k++)
 			{
 			var resultrow = results[k];
-			
+
 			var trElem = document.createElement('tr');
+			trElem.id = 'tr_' + resultrow.f_id;
+
 			tbodyElem.appendChild(trElem)
+			
+			// add map button
+			var tdElem = document.createElement('td');
+			var btnElem = document.createElement('button');
+			btnElem.id = resultrow.f_id; // session id
+			btnElem.textContent = "VIEW";
+			btnElem.onclick = function(e) { gptstat.onclickMap(e); };
+			btnElem.classList.add('aTable');
+			tdElem.appendChild(btnElem);
+			trElem.appendChild(tdElem);
 			
 			if (search.primarysearchtypeid == defines.searchtype.player)
 				{
@@ -242,7 +533,6 @@ var gptstat =
 	
 		gptmain.browserResize();
 		},
-	
 		
 	onclickStatResultTable:function(e)
 		{
@@ -256,6 +546,8 @@ var gptstat =
 		gptut.setDivShowState('idMainCmdContent',false,false);
 	
 		gptut.setShowState('divStats',!show);
+		
+		gptstat.processonclickMap('',false);
 		
 		gptmain.registerCmds(null);
 		if (show == true)
@@ -314,7 +606,7 @@ var gptstat =
 
 		gptstat.generateSummaryResultTable(tblName,results,search);
 
-		var divElem = document.getElementById('divStatsResults')
+		var divElem = document.getElementById('divStatResultsParentId'); //('divStatsResults')
 		divElem.addEventListener('click', gptstat.onclickStatResultTable);
 		
 		gptstat.onclickStatResultTable();

@@ -4,6 +4,11 @@
     --kwbball-body-bgcolor:#FAF9F6; /*#E8E8E8;*/
     --kwbball-body-color:#000000;
      
+    --pitchbox_throw_highlight_bgcolor: rgb(0,255,0);
+    --pitchbox_throw_highlight_color: #FFFFFF;
+    --pitchbox_call_highlight_bgcolor: rgb(255, 165, 0);
+    --pitchbox_call_highlight_color: #FFFFFF;
+     
     /* table settings */
     --table-thead-bgcolor:#a6a59d;
     --table-thead-color:#000000;
@@ -319,14 +324,14 @@ table.data.display tbody tr td {
 table.data.display tbody tr.selectedRow td {
     background-color: var(--table-tbody-selected-bgcolor);
     }
-
+  
 pitchtable
     {
-    width:100%;
+    width:auto;
     }
 
-table.pitchtable thead tr th {
-    background-color:inherit !important;
+table.pitchtable thead tr th { 
+    background-color:var(--table-thead-bgcolor);
     color:inherit;
     text-align:center !important;
     font-weight:500 !important;
@@ -334,7 +339,7 @@ table.pitchtable thead tr th {
     border:1px solid black !important;
     }
 table.pitchtable tbody tr td {
-    background-color:inherit;
+    background-color:var(--table-tbody-bgcolor);
     color:inherit;
     font-weight:500 !important;
     font-size:1.0rem;
@@ -343,13 +348,17 @@ table.pitchtable tbody tr td {
     }
 table.pitchtable tfoot tr th,
 table.pitchtable tfoot tr td {
-    background-color:inherit !important;
+    background-color:var(--table-tbody-bgcolor);
     color:inherit;
     font-weight:500 !important;
     font-size:1.0rem;
     text-align:center;
     border:1px solid black !important;
     border-top:2px double black !important;
+    }
+table.pitchtable tbody tr.selectedRow td {
+    background-color: var(--table-tbody-selected-bgcolor);
+    color:var(--table-tbody-selected-color);
     }
 
 .cmdHighlight 
@@ -423,15 +432,35 @@ table.pitchtable tfoot tr td {
     padding-right:1.0rem;
     }
     
-.cmd1   { grid-column: 1;}
-.cmd2   { grid-column: 2;}
-.cmd3   { grid-column: 3;}
-.cmd4   { grid-column: 4;}
+.cmd1   
+    { 
+    grid-column: 1;
+    align-items:center;
+	justify-content:center;
+    }
+.cmd2
+    {
+    grid-column: 2;
+    align-items:center;
+	justify-content:center;
+    }
+.cmd3
+    {
+    grid-column: 3;
+    align-items:center;
+	justify-content:center;
+    }
+.cmd4
+    {
+    grid-column: 4;
+    align-items:center;
+	justify-content:center;
+    }
 
 .sessionsmain_wrapper
     {
     display: grid;
-    grid-gap: 0px;
+    grid-gap: 0.3rem;
     grid-template-columns: repeat(3,1fr);
     height:100%;
     width:100%;
@@ -451,6 +480,7 @@ table.pitchtable tfoot tr td {
 
     display:block;
     margin:0 auto;
+    padding-left:0.50rem;
     
     background-repeat:no-repeat;
     background-size:contain;
@@ -477,7 +507,7 @@ table.pitchtable tfoot tr td {
     margin-left:0.50rem;
     margin-right:0.50rem;
     }
-.aGPT
+.aGPT,.aTable
     {
     background-color:var(--button-bgcolor);
     color:var(--button-color);
@@ -497,7 +527,10 @@ table.pitchtable tfoot tr td {
     padding-top:0.45rem;
     padding-bottom:0.45rem;
     }
- 
+ .aTable 
+    {
+    border:2pz.solid red !important;
+    }
 .aGPTModal
     {
     min-width:5.0rem;
@@ -562,9 +595,15 @@ table.pitchtable tfoot tr td {
     {
     align-items: center;
     justify-content:center;
-    text-align:center
+    text-align:center;
     }
-
+.labelLeft
+    {
+    align-items: left;
+    justify-content:left;
+    text-align:left;
+    }
+    
 input[type=number]:hover::-webkit-outer-spin-button,
 input[type=number]:hover::-webkit-inner-spin-button  {  
     width: 1.0rem;
@@ -878,7 +917,7 @@ input[type=checkbox]
     box-sizing: border-box;
     display:flex;
     flex-direction:row;
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
 
     width:100%;
     height:100%;
@@ -891,7 +930,7 @@ input[type=checkbox]
     
     overflow-x:auto;
     overflow-y:auto;
-    min-height:100%;
+    height:100%;
     
     border-right:2px double black;
     padding:1.0rem;
@@ -899,8 +938,8 @@ input[type=checkbox]
 .pitchviewcontrols
     {
     box-sizing: border-box;
-    flex:0 0 1;
-    min-height:100%;
+    flex:0 0 50%;
+    height:100%;
     
     padding:0.5rem;
     }
@@ -912,8 +951,8 @@ input[type=checkbox]
     border-radius:5px;
     
     width:100%;
-    height:60%;
-    margin-top:1.0rem;
+    height:50%;
+    margin-top:0.0rem;
     margin-bottom:1.0rem;
     
     display: grid;
@@ -926,23 +965,39 @@ input[type=checkbox]
 
 .pitchbox_strike
     {
-    background-color:rgba(150, 75, 0, 0.2);
-   
+/*  background-color:rgba(150, 75, 0, 0.2);
     color: #fff;
-    width:100%;
-    height:100%;
-    min-height:100%;
+*/
+    position:relative;
+    overflow-x:visible;
   }
 
 .pitchbox_ball
     {
+/*
     background-color:rgba(150, 75, 0, 0.4);
-   
     color: #fff;
-    width:100%;
-    height:100%;
-    min-height:100%;
+*/
+    position:relative;
+    overflow-x:visible;
   }
+  
+.pitchbox_label
+    {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    overflow-x:visible;
+    width:auto;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight:bold;
+    color: black;
+    z-index: 200;
+    display: block;
+    white-space: nowrap;
+    }
+
 
 .pitchbox_highlight 
     {
@@ -963,7 +1018,7 @@ input[type=checkbox]
 }
 .pitchbox_throw_highlight 
     {
-     background-color:green;
+    background-color:green;
 
     color:#FFFFFF;
     
@@ -1335,7 +1390,7 @@ input[type=checkbox]
 
     display:flex;
     flex-direction:row;
-    flex-wrap:no-wrap;
+    flex-wrap:nowrap;
     }
 .settingsmenulabel
     {
@@ -1352,3 +1407,44 @@ input[type=checkbox]
 	justify-content:right;
     font-weight:500;
     }
+
+.pitchmap_wrapper
+    {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    align-self:stretch;
+    height:100%;
+    width:100%;   
+    align-items:stretch;
+	justify-content:center;
+    }
+.pitchmap_resulttable
+    {
+    flex:0 0 100%;
+    margin-right:0.1rem;
+    
+    border-right:2px double black;
+    }
+.pitchmap_resultmap
+    {
+    flex:0 0 0%;
+    margin-left:0.1rem;
+
+    border-left:2px double black;
+    }
+.pitchmap_resulttable,.pitchmap_resultmap
+    {
+    height:auto;
+    width:auto;
+    
+    overflow-x:auto;
+    overflow-y:auto;
+    }
+    
+.aPush
+    {
+    background-color:var(--button-pushed-bgcolor);
+    color:var(--button-pushed-color);
+    border:var(--button-pushed-border);
+    } 
